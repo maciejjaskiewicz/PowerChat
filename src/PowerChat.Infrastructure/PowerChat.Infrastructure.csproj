@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PowerChat.Application\PowerChat.Application.csproj" />
+    <ProjectReference Include="..\PowerChat.Common\PowerChat.Common.csproj" />
+  </ItemGroup>
+
 </Project>

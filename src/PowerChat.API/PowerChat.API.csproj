@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PowerChat.Application\PowerChat.Application.csproj" />
+    <ProjectReference Include="..\PowerChat.Common\PowerChat.Common.csproj" />
+    <ProjectReference Include="..\PowerChat.Infrastructure\PowerChat.Infrastructure.csproj" />
+    <ProjectReference Include="..\PowerChat.Persistance\PowerChat.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
