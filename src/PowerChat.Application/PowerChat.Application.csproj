@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PowerChat.Common\PowerChat.Common.csproj" />
     <ProjectReference Include="..\PowerChat.Domain\PowerChat.Domain.csproj" />
   </ItemGroup>
