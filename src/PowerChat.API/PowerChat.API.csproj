@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PowerChat.Application\PowerChat.Application.csproj" />
     <ProjectReference Include="..\PowerChat.Common\PowerChat.Common.csproj" />
     <ProjectReference Include="..\PowerChat.Infrastructure\PowerChat.Infrastructure.csproj" />

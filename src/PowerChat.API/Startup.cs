@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace PowerChat.API
 {
@@ -28,9 +29,9 @@ namespace PowerChat.API
             }
 
             app.UseHttpsRedirection();
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
