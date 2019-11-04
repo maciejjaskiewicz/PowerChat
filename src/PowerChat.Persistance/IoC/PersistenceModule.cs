@@ -1,5 +1,8 @@
 ﻿using Autofac;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using PowerChat.Application.Common.Interfaces;
+using PowerChat.Common;
 
 namespace PowerChat.Persistence.IoC
 {
@@ -12,7 +15,15 @@ namespace PowerChat.Persistence.IoC
         }
         protected override void Load(ContainerBuilder builder)
         {
-            base.Load(builder);
+            builder.Register(c =>
+            {
+                var connectionString = _configuration.GetConnectionString("PowerChatDatabase");
+
+                var options = new DbContextOptionsBuilder();
+                options.UseSqlServer(connectionString);
+
+                return new PowerChatDbContext(options.Options, c.Resolve<IDateTime>());
+            }).AsSelf().As<IPowerChatDbContext>();
         }
     }
 }
