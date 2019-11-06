@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using PowerChat.Application.IoC.Modules;
 
 namespace PowerChat.Application.IoC
 {
@@ -6,7 +7,7 @@ namespace PowerChat.Application.IoC
     {
         protected override void Load(ContainerBuilder builder)
         {
-            base.Load(builder);
+            builder.RegisterModule<MediatRModule>();
         }
     }
 }

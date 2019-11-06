@@ -23,7 +23,10 @@ namespace PowerChat.Persistence.IoC
                 options.UseSqlServer(connectionString);
 
                 return new PowerChatDbContext(options.Options, c.Resolve<IDateTime>());
-            }).AsSelf().As<IPowerChatDbContext>();
+            })
+            .AsSelf()
+            .As<IPowerChatDbContext>()
+            .InstancePerLifetimeScope();
         }
     }
 }
