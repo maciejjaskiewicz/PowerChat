@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PowerChat.Application.Channels.Commands;
+using PowerChat.Application.Channels.Commands.CreateChannel;
 using PowerChat.Application.Channels.Queries.GetChannelsList;
 
 namespace PowerChat.API.Controllers

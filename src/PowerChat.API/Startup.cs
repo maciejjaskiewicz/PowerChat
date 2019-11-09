@@ -1,10 +1,13 @@
 using Autofac;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PowerChat.API.Framework.Middleware;
 using PowerChat.API.IoC;
+using PowerChat.Application.Common.Interfaces;
 using Serilog;
 
 namespace PowerChat.API
@@ -20,7 +23,16 @@ namespace PowerChat.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(x =>
+                {
+
+                })
+                .AddNewtonsoftJson()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssemblyContaining<IPowerChatDbContext>();
+                    fv.LocalizationEnabled = false;
+                });
         }
 
         // Autofac configuration
@@ -40,6 +52,7 @@ namespace PowerChat.API
             app.UseSerilogRequestLogging();
 
             app.UseRouting();
+            app.UseExceptionsHandler();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace PowerChat.Application.Channels.Commands
+namespace PowerChat.Application.Channels.Commands.CreateChannel
 {
     public class CreateChannelCommand : IRequest<long>
     {

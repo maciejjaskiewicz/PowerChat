@@ -31,6 +31,7 @@ namespace PowerChat.Application.IoC.Modules
 
             builder.RegisterGeneric(typeof(RequestLogger<>)).As(typeof(IRequestPreProcessor<>));
             builder.RegisterGeneric(typeof(RequestPerformanceBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(RequestValidationBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
 
             builder.Register<ServiceFactory>(outerContext =>
             {

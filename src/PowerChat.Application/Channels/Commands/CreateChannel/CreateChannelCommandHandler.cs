@@ -5,7 +5,7 @@ using PowerChat.Application.Channels.Events;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Domain.Entities;
 
-namespace PowerChat.Application.Channels.Commands
+namespace PowerChat.Application.Channels.Commands.CreateChannel
 {
     public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand, long>
     {
