@@ -4,6 +4,6 @@ namespace PowerChat.Application.Channels.Events
 {
     public class ChannelCreatedEvent : INotification
     {
-        public long UserId { get; set; }
+        public long ChannelId { get; set; }
     }
 }

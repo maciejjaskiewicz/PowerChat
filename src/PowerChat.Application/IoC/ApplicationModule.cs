@@ -7,7 +7,7 @@ namespace PowerChat.Application.IoC
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule<MediatRModule>();
+            builder.RegisterModule<PipelineModule>();
         }
     }
 }

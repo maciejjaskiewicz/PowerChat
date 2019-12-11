@@ -25,7 +25,6 @@
     <ProjectReference Include="..\PowerChat.Application\PowerChat.Application.csproj" />
     <ProjectReference Include="..\PowerChat.Common\PowerChat.Common.csproj" />
     <ProjectReference Include="..\PowerChat.Domain\PowerChat.Domain.csproj" />
-    <ProjectReference Include="..\PowerChat.Infrastructure\PowerChat.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

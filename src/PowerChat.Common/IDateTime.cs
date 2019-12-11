@@ -2,7 +2,7 @@
 
 namespace PowerChat.Common
 {
-    public interface IDateTime
+    public interface IDateTime : IInfrastructureService
     {
         DateTime Now { get; }
         DateTime UtcNow { get; }

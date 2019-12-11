@@ -2,36 +2,37 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PowerChat.Application.Channels.Commands.CreateChannel;
 using PowerChat.Application.Channels.Queries.GetChannelsList;
 
 namespace PowerChat.API.Controllers
 {
-    public class ChannelsController : Controller
+    [Authorize]
+    public class ChannelsController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        public ChannelsController(IMediator mediator) 
+            : base(mediator)
+        { }
 
-        public ChannelsController(IMediator mediator)
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
-            _mediator = mediator;
-        }
-
-        public async Task<IActionResult> GetAll()
-        {
-            var model = await _mediator.Send(new GetChannelsListQuery());
+            var model = await Mediator.Send(new GetChannelsListQuery());
 
             return Ok(Json(model));
         }
 
-        public async Task<IActionResult> Create(CancellationToken cancellationToken)
+        [HttpPost]
+        public async Task<IActionResult> Post(CancellationToken cancellationToken)
         {
             var createChannelCommand = new CreateChannelCommand
             {
                 Name = Guid.NewGuid().ToString()
             };
 
-            var id = await _mediator.Send(createChannelCommand, cancellationToken);
+            var id = await Mediator.Send(createChannelCommand, cancellationToken);
 
             return Ok(Json(id));
         }

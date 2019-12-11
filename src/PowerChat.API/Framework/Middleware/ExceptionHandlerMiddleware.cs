@@ -47,7 +47,13 @@ namespace PowerChat.API.Framework.Middleware
                 case PowerChatValidationException e when exceptionType == typeof(PowerChatValidationException):
                     result = e.Failures;
                     statusCode = HttpStatusCode.BadRequest;
-                    errorCode = "validation";
+                    errorCode = e.Code;
+                    break;
+
+                case PowerChatApplicationException e when exceptionType == typeof(PowerChatApplicationException):
+                    result = e.Message;
+                    statusCode = HttpStatusCode.BadRequest;
+                    errorCode = e.Code;
                     break;
 
                 default:

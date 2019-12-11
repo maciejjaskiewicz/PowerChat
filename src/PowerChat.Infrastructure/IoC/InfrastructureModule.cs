@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
-using PowerChat.Common;
+using PowerChat.Infrastructure.IoC.Modules;
 
 namespace PowerChat.Infrastructure.IoC
 {
@@ -13,9 +13,7 @@ namespace PowerChat.Infrastructure.IoC
         }
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MachineDateTime>()
-                .As<IDateTime>()
-                .InstancePerLifetimeScope();
+            builder.RegisterModule<ServiceModule>();
         }
     }
 }

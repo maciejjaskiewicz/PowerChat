@@ -29,7 +29,7 @@ namespace PowerChat.Application.Channels.Commands.CreateChannel
             _dbContext.Channels.Add(entity);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-            await _mediator.Publish(new ChannelCreatedEvent {UserId = entity.Id}, cancellationToken);
+            await _mediator.Publish(new ChannelCreatedEvent {ChannelId = entity.Id}, cancellationToken);
 
             return entity.Id;
         }

@@ -23,16 +23,15 @@ namespace PowerChat.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(x =>
-                {
-
-                })
+            services.AddControllers()
                 .AddNewtonsoftJson()
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<IPowerChatDbContext>();
                     fv.LocalizationEnabled = false;
                 });
+
+            AspNetRegistration.Register(services, Configuration);
         }
 
         // Autofac configuration
@@ -53,12 +52,14 @@ namespace PowerChat.API
 
             app.UseRouting();
             app.UseExceptionsHandler();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapControllerRoute("default", "{controller=Channels}/{action=GetAll}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Channels}");
             });
         }
     }

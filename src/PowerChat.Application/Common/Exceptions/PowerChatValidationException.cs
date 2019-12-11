@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
+using PowerChat.Common.Exceptions;
 
 namespace PowerChat.Application.Common.Exceptions
 {
-    public class PowerChatValidationException : Exception
+    public class PowerChatValidationException : PowerChatException
     {
         public IDictionary<string, string[]> Failures { get; }
 
         public PowerChatValidationException() 
-            : base("One or more validation failures have occured.")
+            : base("validation","One or more validation failures have occured.")
         {
             Failures = new Dictionary<string, string[]>();    
         }
