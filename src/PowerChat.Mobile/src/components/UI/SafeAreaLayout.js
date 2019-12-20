@@ -2,15 +2,20 @@ import React from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Layout, withStyles } from '@ui-kitten/components';
 
+export const SafeAreaInset = {
+  TOP: 'TOP',
+  BOTTOM: 'BOTTOM'
+} 
+
 const safeAreaLayout = props => {
   const safeAreaInsets = useSafeArea();
   const { insets, style, themedStyle, ...layoutProps } = props;
 
   const toStyleProp = (inset) => {
     switch (inset) {
-      case 'bottom':
+      case SafeAreaInset.BOTTOM:
         return { paddingBottom: safeAreaInsets.bottom };
-      case 'top':
+      case SafeAreaInset.TOP:
         return {
           ...themedStyle.container,
           paddingTop: safeAreaInsets.top,

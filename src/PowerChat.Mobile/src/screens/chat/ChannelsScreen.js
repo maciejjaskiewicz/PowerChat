@@ -9,13 +9,13 @@ import {
   withStyles 
 } from '@ui-kitten/components';
 
-import SafeAreaLayout from './../../components/UI/SafeAreaLayout';
+import SafeAreaLayout, { SafeAreaInset } from './../../components/UI/SafeAreaLayout';
 
 const channelsScreen = props => {
   const { themedStyle, style, navigation, ...restProps } = props;
 
   return (
-    <SafeAreaLayout style={themedStyle.flex1} insets='top'>
+    <SafeAreaLayout style={themedStyle.flex1} insets={SafeAreaInset.TOP}>
       <TopNavigation title='Conversations' alignment='center' leftControl={() =>
         <TopNavigationAction 
           icon={(style) => <Icon {...style} name='arrow-back' />} 

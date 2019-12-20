@@ -1,13 +1,73 @@
-import React from 'react';
-import { View, Image } from 'react-native';
+import React, { useReducer, useCallback } from 'react';
+import { View, Image, Alert } from 'react-native';
 import { Button, Layout, withStyles } from '@ui-kitten/components';
 
 import ScrollableAvoidKeyboard from './../../components/UI/ScrollableAvoidKeyboard';
 import SignInForm from './../../components/auth/SignInForm';
 import textStyle from './../../constants/TextStyle';
 
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues
+    };
+  }
+  return state;
+};
+
 const signInScreen = props => {
   const { themedStyle, style, ...restProps } = props;
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      email: '',
+      password: ''
+    },
+    inputValidities: {
+      email: false,
+      password: false
+    },
+    formIsValid: false
+  });
+
+  const submitHandler = useCallback(() => {
+    if (!formState.formIsValid) {
+      Alert.alert('Wrong input!', 'Please check the errors in the form.', [
+        { text: 'Okay' }
+      ]);
+      return;
+    }
+
+    console.log(formState);
+  }, [formState]);
+
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier
+      });
+    },
+    [dispatchFormState]
+  );
 
   return (
     <ScrollableAvoidKeyboard style={themedStyle.container}>
@@ -19,12 +79,13 @@ const signInScreen = props => {
             source={require('./../../assets/images/icon-white.png')} 
           />
         </View>
-        <SignInForm style={themedStyle.formContainer} />
+        <SignInForm style={themedStyle.formContainer} onInputChange={inputChangeHandler} />
         <Button
           style={themedStyle.signInButton}
           textStyle={textStyle.button}
           size='giant'
-          onPress={() => {}}>
+          disabled={!formState.formIsValid}
+          onPress={submitHandler}>
           SIGN IN
         </Button>
         <Button

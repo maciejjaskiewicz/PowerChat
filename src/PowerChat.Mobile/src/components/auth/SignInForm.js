@@ -2,8 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 import { Button, Icon, withStyles } from '@ui-kitten/components';
 
-import Input from '../UI/Input';
+import TextInput from '../UI/form/TextInput';
+import PasswordInput from '../UI/form/PasswordInput';
 import textStyle from './../../constants/TextStyle';
+import { EmailValidator } from './../../utils/validators';
 
 const signInForm = (props) => {
   const { themedStyle, style, ...restProps } = props;
@@ -11,21 +13,23 @@ const signInForm = (props) => {
   return (
     <View style={[themedStyle.container, style]} {...restProps}>
       <View style={themedStyle.formContainer}>
-        <Input
+        <TextInput
           id='email'
+          autoCapitalize='none'
           textStyle={textStyle.paragraph}
           placeholder='Email'
           icon={(style) => <Icon {...style} name='person' />}
-          onInputChange={() => {}}
+          onInputChange={props.onInputChange}
+          validator={EmailValidator}
+          required
         />
-        <Input
+        <PasswordInput
           id='password'
           style={themedStyle.passwordInput}
           textStyle={textStyle.paragraph}
           placeholder='Password'
-          secureTextEntry={true}
-          icon={(style) => <Icon {...style} name='eye-off' />}
-          onInputChange={() => {}}
+          onInputChange={props.onInputChange}
+          required
         />
         <View style={themedStyle.forgotPasswordContainer}>
           <Button
@@ -33,7 +37,7 @@ const signInForm = (props) => {
             textStyle={themedStyle.forgotPasswordText}
             appearance='ghost'
             activeOpacity={0.75}
-            onPress={() => {}}>
+            onPress={props.onForgotPassword}>
             Forgot your password?
           </Button>
         </View>
@@ -46,7 +50,7 @@ export default withStyles(signInForm, theme => ({
   container: {},
   forgotPasswordContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   passwordInput: {
     marginTop: 16,

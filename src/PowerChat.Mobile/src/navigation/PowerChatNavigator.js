@@ -74,7 +74,7 @@ const powerChatNavigator = createSwitchNavigator({
 
 const createAppNavigator = () => {
   enableScreens();
-  return createAppContainer(appNavigator);
+  return createAppContainer(authNavigator);
 }
 
 export default createAppNavigator();
