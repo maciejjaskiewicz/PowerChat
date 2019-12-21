@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using MediatR;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Application.Common.Results;
-using PowerChat.Application.Users.Dto;
 using PowerChat.Application.Users.Errors;
 using PowerChat.Application.Users.Events;
+using PowerChat.Application.Users.Models;
 using PowerChat.Common.Results;
 
 namespace PowerChat.Application.Users.Commands.Login
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, ApplicationResult<JwtDto>>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, ApplicationResult<LoginResponseModel>>
     {
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
@@ -25,13 +25,13 @@ namespace PowerChat.Application.Users.Commands.Login
             _mediator = mediator;
         }
 
-        public async Task<ApplicationResult<JwtDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<ApplicationResult<LoginResponseModel>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userService.GetUserAsync(request.Email);
 
             if (user == null)
             {
-                return ApplicationResult<JwtDto>.Fail(PowerChatError.Create(UserErrorCodes.UserNotFound,
+                return ApplicationResult<LoginResponseModel>.Fail(PowerChatError.Create(UserErrorCodes.UserNotFound,
                     $"User with email '{request.Email}' was not found."));
             }
 
@@ -41,9 +41,18 @@ namespace PowerChat.Application.Users.Commands.Login
             {
                 var userLoggedInEvent = new UserLoggedInEvent {UserId = user.Id};
                 await _mediator.Publish(userLoggedInEvent, cancellationToken);
+
+                var loginResponse = new LoginResponseModel
+                {
+                    UserId = user.Id,
+                    Token = result.Value.Token,
+                    Expires = result.Value.Expires
+                };
+
+                return ApplicationResult<LoginResponseModel>.Ok(loginResponse);
             }
 
-            return result;
+            return ApplicationResult<LoginResponseModel>.Fail(result.Error);
         }
     }
 }

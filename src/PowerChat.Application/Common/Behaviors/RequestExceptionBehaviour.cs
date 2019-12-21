@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using PowerChat.Application.Common.Exceptions;
 
 namespace PowerChat.Application.Common.Behaviors
 {
@@ -23,6 +24,11 @@ namespace PowerChat.Application.Common.Behaviors
             }
             catch (Exception e)
             {
+                if (e is PowerChatValidationException)
+                {
+                    throw e;
+                }
+
                 var name = typeof(TRequest).Name;
                 _logger.LogError(e, $"PowerChat Request Error: {name}. {e.Message}");
                 throw e;

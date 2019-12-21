@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { AppLoading } from 'expo';
@@ -8,6 +8,7 @@ import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { mapping, dark as darkTheme } from '@eva-design/eva';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ReduxThunk from 'redux-thunk';
 
 import PowerChatNavigator from './navigation/PowerChatNavigator';
 import AuthReducer from './store/reducers/auth';
@@ -26,7 +27,9 @@ const fetchFonts = () => {
   });
 }
 
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer, composeWithDevTools(
+  applyMiddleware(ReduxThunk)
+));
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);

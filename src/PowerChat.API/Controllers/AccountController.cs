@@ -17,9 +17,9 @@ namespace PowerChat.API.Controllers
         public async Task<IActionResult> Post([FromBody]LoginCommand command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
-            var token = result.GetValueOrThrow();
+            var response = result.GetValueOrThrow();
 
-            return Json(token);
+            return Json(response);
         }
 
         [HttpPost]

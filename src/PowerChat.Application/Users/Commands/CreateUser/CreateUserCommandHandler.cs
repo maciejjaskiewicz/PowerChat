@@ -1,10 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Application.Common.Results;
 using PowerChat.Application.Users.Events;
 using PowerChat.Domain.Entities;
+using PowerChat.Domain.Enums;
 using PowerChat.Domain.ValueObjects;
 
 namespace PowerChat.Application.Users.Commands.CreateUser
@@ -27,7 +29,8 @@ namespace PowerChat.Application.Users.Commands.CreateUser
             {
                 Email = request.Email,
                 UserName = request.Email,
-                Name = PersonName.Create(request.FirstName, request.LastName)
+                Name = PersonName.Create(request.FirstName, request.LastName),
+                Gender = !string.IsNullOrEmpty(request.Gender) ? (Gender?)Enum.Parse<Gender>(request.Gender) : null
             };
 
             var result = await _userService.CreateUserAsync(user, request.Password);

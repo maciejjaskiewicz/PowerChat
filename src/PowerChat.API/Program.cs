@@ -37,6 +37,7 @@ namespace PowerChat.API
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://localhost:5001", "http://192.168.8.101:5001");
                     webBuilder.UseStartup<Startup>();
                 });
         }

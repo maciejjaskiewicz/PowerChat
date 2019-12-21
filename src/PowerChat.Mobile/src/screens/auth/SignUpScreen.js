@@ -1,16 +1,22 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import { View, Image, Alert } from 'react-native';
-import { Button, Layout, withStyles } from '@ui-kitten/components';
+import { Button, Layout, Spinner, withStyles } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 
 import ScrollableAvoidKeyboard from './../../components/UI/ScrollableAvoidKeyboard';
 import SignUpForm from './../../components/auth/SignUpForm';
 import textStyle from './../../constants/TextStyle';
 import { FORM_INPUT_UPDATE, formReducer } from './../../utils/form';
+import { SignUpModel } from './../../models/auth/SignUpModel';
+import * as authActions from './../../store/actions/auth';
 
 const signUpScreen = props => {
   const { themedStyle, style, ...restProps } = props;
+  const dispatch = useDispatch();
 
-  const [formState, dispatchFormState] = useReducer(formReducer, {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const formInitialState = {
     inputValues: {
       firstname: '',
       lastname: '',
@@ -26,10 +32,10 @@ const signUpScreen = props => {
       gender: false,
     },
     formIsValid: false
-  });
+  };
+  const [formState, dispatchFormState] = useReducer(formReducer, formInitialState);
 
-  const submitHandler = useCallback(() => {
-    console.log(formState);
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
         { text: 'Okay' }
@@ -37,7 +43,37 @@ const signUpScreen = props => {
       return;
     }
 
+    const signUpModel = new SignUpModel(
+      formState.inputValues.firstname,
+      formState.inputValues.lastname,
+      formState.inputValues.email,
+      formState.inputValues.password,
+      formState.inputValues.gender
+    );
+
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(authActions.signUp(signUpModel));
+
+      Alert.alert("Congratulations!", "Your account has been created!", [
+        { 
+          text: 'Ok', 
+          onPress: () => props.navigation.goBack()
+        }
+      ]);
+    } catch (err) {
+      setError(err);
+      setIsLoading(false);
+    }
+
   }, [formState]);
+
+  useEffect(() => {
+    if(error) {
+      Alert.alert(error.title, error.message, [{ text: 'Ok' }]);   
+    }
+  }, [error]);
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -62,13 +98,17 @@ const signUpScreen = props => {
           />
         </View>
         <SignUpForm style={themedStyle.formContainer} onInputChange={inputChangeHandler} />
-        <Button
-          style={themedStyle.signUpButton}
-          textStyle={textStyle.button}
-          size='giant'
-          onPress={submitHandler}>
-          SIGN UP
-        </Button>
+        {isLoading ? 
+          <View style={themedStyle.loadingContainer}><Spinner size="large" /></View> :
+          <Button
+            style={themedStyle.signUpButton}
+            textStyle={textStyle.button}
+            size='giant'
+            disabled={!formState.formIsValid}
+            onPress={submitHandler}>
+            SIGN UP
+          </Button>
+        }
         <Button
           style={themedStyle.signInButton}
           textStyle={themedStyle.signInText}
@@ -106,6 +146,9 @@ export default withStyles(signUpScreen, theme => ({
     flex: 1,
     marginTop: 32,
     paddingHorizontal: 16,
+  },
+  loadingContainer: {
+    alignItems: 'center'
   },
   signUpButton: {
     marginTop: 12,

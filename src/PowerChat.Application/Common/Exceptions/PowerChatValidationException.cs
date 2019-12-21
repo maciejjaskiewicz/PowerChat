@@ -1,35 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FluentValidation.Results;
+using PowerChat.Application.Common.Models;
 using PowerChat.Common.Exceptions;
 
 namespace PowerChat.Application.Common.Exceptions
 {
     public class PowerChatValidationException : PowerChatException
     {
-        public IDictionary<string, string[]> Failures { get; }
+        public IList<ValidationFailureModel> Failures { get; }
 
         public PowerChatValidationException() 
             : base("validation","One or more validation failures have occured.")
         {
-            Failures = new Dictionary<string, string[]>();    
+            Failures = new List<ValidationFailureModel>();    
         }
 
         public PowerChatValidationException(IReadOnlyCollection<ValidationFailure> failures)
             : this()
         {
-            var propertyNames = failures
-                .Select(x => x.PropertyName)
-                .Distinct();
-
-            foreach (var propertyName in propertyNames)
+            foreach (var failure in failures)
             {
-                var propertyFailures = failures
-                    .Where(x => x.PropertyName == propertyName)
-                    .Select(x => x.ErrorMessage)
-                    .ToArray();
-
-                Failures.Add(propertyName, propertyFailures);
+                Failures.Add(new ValidationFailureModel
+                {
+                    Property = failure.PropertyName,
+                    Code = failure.ErrorCode,
+                    Message = failure.ErrorMessage
+                });
             }
         }
     }

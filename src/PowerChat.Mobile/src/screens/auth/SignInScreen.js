@@ -1,10 +1,12 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import { View, Image, Alert } from 'react-native';
-import { Button, Layout, withStyles } from '@ui-kitten/components';
+import { Button, Layout, Spinner, withStyles } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 
 import ScrollableAvoidKeyboard from './../../components/UI/ScrollableAvoidKeyboard';
 import SignInForm from './../../components/auth/SignInForm';
 import textStyle from './../../constants/TextStyle';
+import * as authActions from './../../store/actions/auth';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -33,7 +35,10 @@ const formReducer = (state, action) => {
 
 const signInScreen = props => {
   const { themedStyle, style, ...restProps } = props;
+  const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: '',
@@ -46,7 +51,7 @@ const signInScreen = props => {
     formIsValid: false
   });
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
         { text: 'Okay' }
@@ -54,8 +59,26 @@ const signInScreen = props => {
       return;
     }
 
-    console.log(formState);
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(authActions.signIn(
+        formState.inputValues.email,
+        formState.inputValues.password
+      ));
+
+      props.navigation.navigate('App');
+    } catch (err) {
+      setError(err);
+      setIsLoading(false);
+    }
   }, [formState]);
+
+  useEffect(() => {
+    if(error) {
+      Alert.alert(error.title, error.message, [{ text: 'Ok' }]);   
+    }
+  }, [error]);
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -79,15 +102,18 @@ const signInScreen = props => {
             source={require('./../../assets/images/icon-white.png')} 
           />
         </View>
-        <SignInForm style={themedStyle.formContainer} onInputChange={inputChangeHandler} />
-        <Button
-          style={themedStyle.signInButton}
-          textStyle={textStyle.button}
-          size='giant'
-          disabled={!formState.formIsValid}
-          onPress={submitHandler}>
-          SIGN IN
-        </Button>
+        <SignInForm style={themedStyle.formContainer} onInputChange={inputChangeHandler} />    
+        {isLoading ? 
+          <View style={themedStyle.loadingContainer}><Spinner size="large" /></View> :
+          <Button
+            style={themedStyle.signInButton}
+            textStyle={textStyle.button}
+            size='giant'
+            disabled={!formState.formIsValid}
+            onPress={submitHandler}>
+            SIGN IN
+          </Button>
+        }
         <Button
           style={themedStyle.signUpButton}
           textStyle={themedStyle.signUpText}
@@ -125,6 +151,9 @@ export default withStyles(signInScreen, theme => ({
     flex: 1,
     marginTop: 32,
     paddingHorizontal: 16,
+  },
+  loadingContainer: {
+    alignItems: 'center'
   },
   signInButton: {
     marginHorizontal: 16,

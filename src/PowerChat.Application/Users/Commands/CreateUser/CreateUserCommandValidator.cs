@@ -1,5 +1,8 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
+using FluentValidation.Results;
 using PowerChat.Application.Common.Interfaces;
+using PowerChat.Domain.Enums;
 
 namespace PowerChat.Application.Users.Commands.CreateUser
 {
@@ -26,8 +29,10 @@ namespace PowerChat.Application.Users.Commands.CreateUser
 
             RuleFor(x => x.Email)
                 .EmailAddress()
+                .WithMessage(x => $"'{x.Email}' is not a valid email address.")
                 .NotEmpty()
                 .MustAsync(async (email, cancellationToken) => await _userService.UserExistsAsync(email) == false)
+                .WithErrorCode("EmailAlreadyExists")
                 .WithMessage(x => $"User with email '{x.Email}' already exists.");
 
             RuleFor(x => x.Password)
@@ -40,9 +45,26 @@ namespace PowerChat.Application.Users.Commands.CreateUser
                     {
                         foreach (var error in result.ValidationFailures)
                         {
-                            context.AddFailure(error);
+                            var validationFailure = new ValidationFailure("Password", error)
+                            {
+                                ErrorCode = "InvalidPassword"
+                            };
+
+                            context.AddFailure(validationFailure);
                         }
                     }
+                });
+
+            RuleFor(x => x.Gender)
+                .Custom((gender, context) =>
+                {
+                    if (string.IsNullOrEmpty(gender)) return;
+
+                    if (!Enum.IsDefined(typeof(Gender), gender))
+                    {
+                        context.AddFailure($"'{gender}' is invalid gender type.");
+                    }
+
                 });
         }
     }
