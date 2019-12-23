@@ -10,6 +10,7 @@ import SignUpScreen from './../screens/auth/SignUpScreen';
 import ChannelsScreen from './../screens/chat/ChannelsScreen';
 import FriendsScreen from './../screens/friends/FriendsScreen';
 import ProfileScreen from './../screens/profile/ProfileScreen';
+import EditProfileScreen from './../screens/profile/EditProfileScreen';
 
 const authNavigator = createStackNavigator({
   SignIn: SignInScreen,
@@ -35,7 +36,8 @@ const friendsNavigator = createStackNavigator({
 }, { headerMode: 'none' });
 
 const profileNavigator = createStackNavigator({
-  profile: ProfileScreen
+  profile: ProfileScreen,
+  editProfile: EditProfileScreen
 }, { headerMode: 'none' });
 
 const BottonTabBar = ({ navigation }) => {

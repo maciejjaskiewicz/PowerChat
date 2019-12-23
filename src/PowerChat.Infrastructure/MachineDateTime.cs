@@ -1,5 +1,6 @@
 ﻿using System;
 using PowerChat.Common;
+using PowerChat.Common.Interfaces;
 
 namespace PowerChat.Infrastructure
 {

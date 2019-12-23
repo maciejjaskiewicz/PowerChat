@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Common;
+using PowerChat.Common.Interfaces;
 
 namespace PowerChat.Persistence.IoC
 {

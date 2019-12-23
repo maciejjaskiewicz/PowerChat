@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Common;
+using PowerChat.Common.Interfaces;
 using PowerChat.Domain.Common;
 using PowerChat.Domain.Entities;
 using PowerChat.Persistence.Configurations.Extensions;

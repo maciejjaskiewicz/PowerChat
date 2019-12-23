@@ -19,7 +19,16 @@ const inputReducer = (state, action) => {
 const radioInput = props => {
   const { themedStyle, style, id, onInputChange, ...restProps } = props;
 
-  const [selectedIndex, setSelectedIndex] = useState(undefined);
+  const getInitialValue = () => {
+    if(props.initialValue && !selectedIndex) {
+      const valueIndex = props.options.findIndex(x => x === props.initialValue)
+      if(valueIndex !== -1) {
+        return valueIndex;
+      }
+    }
+  }
+
+  const [selectedIndex, setSelectedIndex] = useState(getInitialValue());
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : '',
     isValid: props.initiallyValid ? props.initiallyValid : false 

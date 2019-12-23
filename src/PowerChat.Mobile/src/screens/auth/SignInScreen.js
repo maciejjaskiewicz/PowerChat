@@ -3,35 +3,11 @@ import { View, Image, Alert } from 'react-native';
 import { Button, Layout, Spinner, withStyles } from '@ui-kitten/components';
 import { useDispatch } from 'react-redux';
 
-import ScrollableAvoidKeyboard from './../../components/UI/ScrollableAvoidKeyboard';
+import ScrollableAvoidKeyboard from '../../components/UI/view/ScrollableAvoidKeyboard';
 import SignInForm from './../../components/auth/SignInForm';
 import textStyle from './../../constants/TextStyle';
 import * as authActions from './../../store/actions/auth';
-
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
-
-const formReducer = (state, action) => {
-  if (action.type === FORM_INPUT_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.input]: action.value
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.input]: action.isValid
-    };
-    let updatedFormIsValid = true;
-    for (const key in updatedValidities) {
-      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
-    }
-    return {
-      formIsValid: updatedFormIsValid,
-      inputValidities: updatedValidities,
-      inputValues: updatedValues
-    };
-  }
-  return state;
-};
+import { FORM_INPUT_UPDATE, formReducer } from './../../utils/form';
 
 const signInScreen = props => {
   const { themedStyle, style, ...restProps } = props;

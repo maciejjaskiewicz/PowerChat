@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PowerChat.Common
+namespace PowerChat.Common.Interfaces
 {
     public interface IDateTime : IInfrastructureService
     {

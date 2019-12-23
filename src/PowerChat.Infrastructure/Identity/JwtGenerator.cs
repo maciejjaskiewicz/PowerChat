@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PowerChat.Application.Users.Dto;
 using PowerChat.Common;
 using PowerChat.Common.Extensions;
+using PowerChat.Common.Interfaces;
 
 namespace PowerChat.Infrastructure.Identity
 {

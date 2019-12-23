@@ -9,7 +9,7 @@ import {
   withStyles 
 } from '@ui-kitten/components';
 
-import SafeAreaLayout, { SafeAreaInset } from './../../components/UI/SafeAreaLayout';
+import SafeAreaLayout, { SafeAreaInset } from '../../components/UI/view/SafeAreaLayout';
 
 const channelsScreen = props => {
   const { themedStyle, style, navigation, ...restProps } = props;

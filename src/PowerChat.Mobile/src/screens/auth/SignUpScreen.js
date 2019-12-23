@@ -3,7 +3,7 @@ import { View, Image, Alert } from 'react-native';
 import { Button, Layout, Spinner, withStyles } from '@ui-kitten/components';
 import { useDispatch } from 'react-redux';
 
-import ScrollableAvoidKeyboard from './../../components/UI/ScrollableAvoidKeyboard';
+import ScrollableAvoidKeyboard from '../../components/UI/view/ScrollableAvoidKeyboard';
 import SignUpForm from './../../components/auth/SignUpForm';
 import textStyle from './../../constants/TextStyle';
 import { FORM_INPUT_UPDATE, formReducer } from './../../utils/form';

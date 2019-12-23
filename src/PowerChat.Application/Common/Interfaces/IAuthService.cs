@@ -2,6 +2,7 @@
 using PowerChat.Application.Common.Results;
 using PowerChat.Application.Users.Dto;
 using PowerChat.Common;
+using PowerChat.Common.Interfaces;
 
 namespace PowerChat.Application.Common.Interfaces
 {

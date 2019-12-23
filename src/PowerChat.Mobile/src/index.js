@@ -12,9 +12,11 @@ import ReduxThunk from 'redux-thunk';
 
 import PowerChatNavigator from './navigation/PowerChatNavigator';
 import AuthReducer from './store/reducers/auth';
+import ProfileReducer from './store/reducers/profile';
 
 const rootReducer = combineReducers({
-  auth: AuthReducer
+  auth: AuthReducer,
+  profile: ProfileReducer
 });
 
 const fetchFonts = () => {

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
+using PowerChat.API.IoC.Modules;
 using PowerChat.Application.IoC;
 using PowerChat.Infrastructure.IoC;
 using PowerChat.Persistence.IoC;
@@ -20,6 +21,7 @@ namespace PowerChat.API.IoC
             builder.RegisterModule(new InfrastructureModule(_configuration));
             builder.RegisterModule(new PersistenceModule(_configuration));
             builder.RegisterModule<ApplicationModule>();
+            builder.RegisterModule<ServiceModule>();
         }
     }
 }

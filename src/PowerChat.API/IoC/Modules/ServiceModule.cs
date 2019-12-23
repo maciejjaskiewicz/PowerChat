@@ -2,14 +2,14 @@
 using Autofac;
 using PowerChat.Common.Interfaces;
 
-namespace PowerChat.Infrastructure.IoC.Modules
+namespace PowerChat.API.IoC.Modules
 {
     public class ServiceModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .Where(x => x.IsAssignableTo<IInfrastructureService>())
+                .Where(x => x.IsAssignableTo<IApiService>())
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 

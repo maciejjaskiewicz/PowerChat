@@ -10,6 +10,7 @@ namespace PowerChat.Domain.Entities
     {
         public PersonName Name { get; set; }
         public Gender? Gender { get; set; }
+        public string About { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
