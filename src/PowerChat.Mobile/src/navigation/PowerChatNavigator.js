@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createAppContainer, createSwitchNavigator, SafeAreaView } from 'react-navigation'
 import { Icon, BottomNavigation, BottomNavigationTab } from '@ui-kitten/components';
 
+import BootScreen from './../screens/BootScreen';
 import SignInScreen from './../screens/auth/SignInScreen';
 import SignUpScreen from './../screens/auth/SignUpScreen';
 import ChannelsScreen from './../screens/chat/ChannelsScreen';
@@ -70,6 +71,7 @@ const appNavigator = createBottomTabNavigator({
 });
 
 const powerChatNavigator = createSwitchNavigator({
+  Boot: BootScreen,
   Auth: authNavigator,
   App: appNavigator
 });

@@ -1,9 +1,12 @@
 import Api from './../../constants/Api';
 import PowerChatError from './../../models/PowerChatError';
-import { SignInResponseModel } from '../../models/auth/SignInResponseModel';
+import { AuthData } from '../../models/auth/AuthData';
+import { storeAuthData } from './../../utils/auth';
 
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
+export const SIGN_OUT = 'SIGN_OUT';
+export const AUTHENTICATE = 'AUTHENTICATE';
 
 export const signIn = (email, password) => {
   return async dispatch => {
@@ -41,13 +44,14 @@ export const signIn = (email, password) => {
     }
 
     const resData = await response.json();
-    const signInRespose = new SignInResponseModel(
+    const authData = new AuthData(
       resData.userId,
       resData.token,
       resData.expires
     );
 
-    dispatch({ type: SIGN_IN, sinInResponse: signInRespose });
+    dispatch({ type: SIGN_IN, sinInResponse: authData });
+    storeAuthData(authData);
   };
 };
 
@@ -89,4 +93,12 @@ export const signUp = (signUpModel) => {
 
     dispatch({ type: SIGN_UP });
   };
+};
+
+export const signOut = () => {
+  return { type: SIGN_OUT };
+};
+
+export const authenticate = (authData) => {
+  return { type: AUTHENTICATE, authData: authData };
 };

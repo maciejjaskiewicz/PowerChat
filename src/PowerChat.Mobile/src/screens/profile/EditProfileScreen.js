@@ -124,6 +124,7 @@ const editProfile = props => {
               textStyle={TextStyle.paragraph}
               placeholder='First Name'
               onInputChange={inputChangeHandler}
+              initiallyValid={true}
               initialValue={profile.firstname}
               validator={NameValidator}
               required
@@ -135,6 +136,7 @@ const editProfile = props => {
               textStyle={TextStyle.paragraph}
               placeholder='Last Name'
               onInputChange={inputChangeHandler}
+              initiallyValid={true}
               initialValue={profile.lastname}
               validator={NameValidator}
               required
@@ -226,7 +228,7 @@ export default withStyles(editProfile, theme => ({
     ...TextStyle.subtitle
   },
   loadingContainer: {
-    marginTop: 24,
+    marginVertical: 24,
     alignItems: 'center'
   }
 }));

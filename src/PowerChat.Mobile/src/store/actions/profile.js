@@ -1,5 +1,5 @@
 import Api from './../../constants/Api';
-import { handlUnauthorized, asertAuthorization } from './../../utils/auth';
+import { handleUnauthorized, assertAuthorization } from './../../utils/auth';
 import { ProfileModel } from './../../models/profile/ProfileModel';
 import PowerChatError from './../../models/PowerChatError';
 
@@ -9,7 +9,7 @@ export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const fetchProfile = () => {
   return async (dispatch, getState) => {
     const state = getState();
-    asertAuthorization(state, dispatch);
+    if(assertAuthorization(state, dispatch)) return;
 
     const response = await fetch(`${Api.url}/account`, {
       method: 'GET',
@@ -21,7 +21,8 @@ export const fetchProfile = () => {
 
     if(!response.ok) {
       if(response.status === 401) {
-        dispatch(handlUnauthorized());
+        handleUnauthorized(dispatch);
+        return;
       }
       
       let title = 'An Error Occurred!';
@@ -49,7 +50,7 @@ export const fetchProfile = () => {
 export const updateProfile = (updateProfileModel) => {
   return async (dispatch, getState) => {
     const state = getState();
-    asertAuthorization(state, dispatch);
+    if(assertAuthorization(state, dispatch)) return;
 
     const response = await fetch(`${Api.url}/account`, {
       method: 'PUT',

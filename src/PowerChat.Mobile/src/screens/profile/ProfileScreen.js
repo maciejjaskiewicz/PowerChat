@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, RefreshControl, Alert } from 'react-native';
 import {
   Icon,
   Text,
   Button,
+  Spinner,
   TopNavigation,
   TopNavigationAction,
   withStyles 
@@ -17,13 +18,21 @@ import TextStyle from './../../constants/TextStyle';
 import ProfilePhoto from './../../components/profile/ProfilePhotoSetting';
 import ProfileSetting from './../../components/profile/ProfileSetting';
 import * as profileActions from './../../store/actions/profile';
+import * as authActions from './../../store/actions/auth';
 
 const profileScreen = props => {
   const { themedStyle, style, ...restProps } = props;
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    dispatch(profileActions.fetchProfile()); 
+    const loadProfile = async () => {
+      setIsLoading(true);
+      await dispatch(profileActions.fetchProfile()); 
+      setIsLoading(false);
+    };
+
+    loadProfile();
   }, [dispatch]);
 
   const profile = useSelector(state => state.profile);
@@ -36,15 +45,41 @@ const profileScreen = props => {
     }} />
   ];
 
-  return (
-    <SafeAreaLayout style={themedStyle.flex1} insets={SafeAreaInset.TOP}>
-      <TopNavigation 
-        title='Profile' 
-        alignment='center' 
-        titleStyle={themedStyle.headerText}
-        rightControls={renderRightControls()}
-      />
-      <ContainerView style={themedStyle.container}>
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await dispatch(profileActions.fetchProfile());
+    setRefreshing(false);
+  }, [refreshing]);
+
+  const signOutHandler = () => {
+    Alert.alert('Sign Out', 'Are you sure you would like to sign out?', [
+      { 
+        text: 'Cancel', 
+        style: 'cancel' 
+      },
+      { 
+        text: 'Sign Out', 
+        style: 'destructive', 
+        onPress: () => {
+          dispatch(authActions.signOut());
+          props.navigation.navigate('Auth');
+        }
+      }
+    ]);
+  }
+
+  let content = (
+    <View style={themedStyle.loadingContainer}>
+      <Spinner size="giant" />
+    </View>
+  );
+
+  if(!isLoading) {
+    content = (
+      <ContainerView 
+        style={themedStyle.container}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <View style={themedStyle.photoSection}>
           <ProfilePhoto 
             style={themedStyle.photo}
@@ -92,10 +127,22 @@ const profileScreen = props => {
           style={themedStyle.button}
           textStyle={TextStyle.button}
           size='large'
-          onPress={() => {}}>
+          onPress={signOutHandler}>
           SIGN OUT
         </Button>
       </ContainerView>
+    );
+  }
+
+  return (
+    <SafeAreaLayout style={themedStyle.flex1} insets={SafeAreaInset.TOP}>
+      <TopNavigation 
+        title='Profile' 
+        alignment='center' 
+        titleStyle={themedStyle.headerText}
+        rightControls={renderRightControls()}
+      />
+      {content}
     </SafeAreaLayout>
   );
 };
@@ -103,6 +150,12 @@ const profileScreen = props => {
 export default withStyles(profileScreen, theme => ({
   container: {
     flex: 1,
+    backgroundColor: theme['background-basic-color-2']
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: theme['background-basic-color-2']
   },
   headerText: {
