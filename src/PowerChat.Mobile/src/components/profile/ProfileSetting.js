@@ -16,12 +16,12 @@ const profileSetting = props => {
   };
 
   return (
-      <View
-        {...restProps}
-        style={[themedStyle.container, style]}>
-          {props.hint ? renderTextElement(props.hint, themedStyle.hintLabel) : null}
-          {renderTextElement(props.value, themedStyle.valueLabel)}
-      </View>
+    <View
+      {...restProps}
+      style={[themedStyle.container, style]}>
+        {props.hint ? renderTextElement(props.hint, themedStyle.hintLabel) : null}
+        {renderTextElement(props.value, themedStyle.valueLabel)}
+    </View>
   );
 }
 

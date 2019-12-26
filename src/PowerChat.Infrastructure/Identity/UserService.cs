@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Application.Common.Results;
 using PowerChat.Domain.Entities;
@@ -11,15 +13,23 @@ namespace PowerChat.Infrastructure.Identity
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
+        private readonly IPowerChatDbContext _dbContext;
 
-        public UserService(UserManager<User> userManager)
+        public UserService(UserManager<User> userManager, 
+            IPowerChatDbContext dbContext)
         {
             _userManager = userManager;
+            _dbContext = dbContext;
         }
 
         public async Task<User> GetUserAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<bool> UserExistsAsync(long id, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Users.AnyAsync(x => x.Id == id, cancellationToken);
         }
 
         public async Task<bool> UserExistsAsync(string email)

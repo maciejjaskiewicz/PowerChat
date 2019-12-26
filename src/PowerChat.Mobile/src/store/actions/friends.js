@@ -1,19 +1,19 @@
 import Api from './../../constants/Api';
 import { handleUnauthorized, authorized } from './../../utils/auth';
-import { ProfileModel } from './../../models/profile/ProfileModel';
 import PowerChatError from './../../models/PowerChatError';
+import UserPriviewModel from '../../models/UserPreviewModel';
 
-export const FETCH_PROFILE = 'FETCH_PROFILE';
-export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const FETCH_FRIENDS = 'FETCH_FRIENDS';
+export const ADD_FRIEND = 'ADD_FRIEND';
 
-export const fetchProfile = () => {
+export const fetchFriends = () => {
   return async (dispatch, getState) => {
     const state = getState();
     if(!authorized(state.auth)) {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/account`, {
+    const response = await fetch(`${Api.url}/friends`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -31,52 +31,74 @@ export const fetchProfile = () => {
       throw new PowerChatError(title, message);
     }
 
+    const friends = []
     const resData = await response.json();
-    const profile = new ProfileModel(
-      resData.firstname,
-      resData.lastname,
-      resData.gender,
-      resData.about,
-      resData.email,
-      new Date(resData.createdDate)
-    );
+
+    resData.forEach(friend => {
+      const friendModel = new UserPriviewModel(
+        friend.id,
+        friend.name,
+        friend.gender,
+        '' // TODO: avatar
+      );
+
+      friends.push(friendModel);
+    });
 
     dispatch({
-      type: FETCH_PROFILE,
-      profile: profile
+      type: FETCH_FRIENDS,
+      friends: friends
     });
   };
 }
 
-export const updateProfile = (updateProfileModel) => {
+export const addFriend = (id) => {
   return async (dispatch, getState) => {
     const state = getState();
     if(!authorized(state.auth)) {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/account`, {
-      method: 'PUT',
+    const response = await fetch(`${Api.url}/friends`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${state.auth.token}`
       },
-      body: JSON.stringify({...updateProfileModel})
+      body: JSON.stringify({
+        userId: id
+      })
     });
 
     if(!response.ok) {
       if(response.status === 401) {
         return dispatch(handleUnauthorized());
       }
-
+      
       let title = 'An Error Occurred!';
       let message = 'Something went wrong. Please try again.';
       throw new PowerChatError(title, message);
     }
 
+    const userResponse = await fetch(`${Api.url}/users/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${state.auth.token}`
+      }
+    });
+
+    const userResData = await userResponse.json();
+    const friend = new UserPriviewModel(
+      userResData.id,
+      userResData.fullName,
+      userResData.gender,
+      '' // TODO: avatar
+    );
+
     dispatch({
-      type: UPDATE_PROFILE,
-      updateProfileModel: updateProfileModel
+      type: ADD_FRIEND,
+      friend: friend
     });
   };
 }

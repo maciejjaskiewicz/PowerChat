@@ -21,7 +21,6 @@ const signOutHandler = (state, action) => {
 };
 
 const authenticateHandler = (state, action) => {
-  console.log(action.authData);
   return {
     userId: action.authData.userId,
     token: action.authData.token,

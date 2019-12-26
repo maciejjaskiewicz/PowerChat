@@ -10,6 +10,8 @@ import SignInScreen from './../screens/auth/SignInScreen';
 import SignUpScreen from './../screens/auth/SignUpScreen';
 import ChannelsScreen from './../screens/chat/ChannelsScreen';
 import FriendsScreen from './../screens/friends/FriendsScreen';
+import FriendProfileScreen from '../screens/friends/FriendProfileScreen';
+import AddFriendScreen from './../screens/friends/AddFriendScreen';
 import ProfileScreen from './../screens/profile/ProfileScreen';
 import EditProfileScreen from './../screens/profile/EditProfileScreen';
 
@@ -33,7 +35,9 @@ const chatNavigator = createStackNavigator({
 });
 
 const friendsNavigator = createStackNavigator({
-  friends: FriendsScreen
+  friends: FriendsScreen,
+  addFriend: AddFriendScreen,
+  friendProfile: FriendProfileScreen
 }, { headerMode: 'none' });
 
 const profileNavigator = createStackNavigator({

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using PowerChat.Domain.Common;
 using PowerChat.Domain.Enums;
@@ -14,5 +15,7 @@ namespace PowerChat.Domain.Entities
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public ICollection<Friendship> SentFriendshipRequests { get; set; }
+        public ICollection<Friendship> ReceivedFriendshipsRequests { get; set; }
     }
 }

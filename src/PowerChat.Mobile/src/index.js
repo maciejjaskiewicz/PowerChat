@@ -11,11 +11,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ReduxThunk from 'redux-thunk';
 
 import PowerChatNavigator from './navigation/PowerChatNavigator';
+import NavigationService from './navigation/NavigationService';
 import AuthReducer from './store/reducers/auth';
+import FriendsReducer from './store/reducers/friends';
 import ProfileReducer from './store/reducers/profile';
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
+  friends: FriendsReducer,
   profile: ProfileReducer
 });
 
@@ -49,7 +52,9 @@ const App = () => {
       <ApplicationProvider mapping={mapping} theme={darkTheme}>
         <Provider store={store}>
           <SafeAreaProvider>
-            <PowerChatNavigator /> 
+            <PowerChatNavigator ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }} /> 
           </SafeAreaProvider>
         </Provider>
       </ApplicationProvider>

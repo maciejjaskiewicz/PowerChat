@@ -16,21 +16,33 @@ const profileScreen = props => {
   const { themedStyle, style, ...restProps } = props;
 
   return (
-    <ContainerView style={themedStyle.container}>
+    <ContainerView style={themedStyle.container} {...restProps}>
       <Layout style={themedStyle.profileInfoContainer}>
-        <ProfileInfo />
+        <ProfileInfo
+          name={props.profileModel.name}
+          gender={props.profileModel.gender}
+          imgUrl={props.profileModel.avatarUrl}
+        />
         <View style={themedStyle.actionContainer}>
-          <Button
-            style={themedStyle.followButton}
-            textStyle={TextStyle.button}
-            icon={(style) => <Icon {...style} name='person-add' />}
-            onPress={() => {}}>
-            FOLLOW
-          </Button>
+          {props.profileModel.isFriend ?
+            <Button
+              style={themedStyle.followButton}
+              textStyle={TextStyle.button}
+              disabled={true}>
+              FRIEND
+            </Button> :
+            <Button
+              style={themedStyle.followButton}
+              textStyle={TextStyle.button}
+              icon={(style) => <Icon {...style} name='person-add' />}
+              onPress={props.onAddFriend}>
+              ADD
+            </Button>
+          }
           <Button
             style={themedStyle.messageButton}
             textStyle={TextStyle.button}
-            appearance='outline'
+            appearance={!props.profileModel.isFriend ? 'outline' : 'filled'}
             icon={(style) => <Icon {...style} name='message-circle' />}
             onPress={() => {}}>
             MESSAGE
@@ -40,7 +52,7 @@ const profileScreen = props => {
           <View 
             activeOpacity={0.65}
             style={themedStyle.parameterContainer}>
-              <Text style={themedStyle.valueLabel}>{`${150}`}</Text>
+              <Text style={themedStyle.valueLabel}>{props.profileModel.friends}</Text>
               <Text
                 style={themedStyle.hintLabel}
                 appearance='hint'
@@ -68,7 +80,9 @@ const profileScreen = props => {
         <Text
           style={themedStyle.profileSectionContent}
           appearance='hint'>
-          I'm an actress. I like listening to music, going to the cinema, walking with my friends, drawing pictures and traveling.
+          {props.profileModel.about && props.profileModel.about.length > 0 
+            ? props.profileModel.about 
+            : "The user hasn't provided any description yet" }
         </Text>
       </View>
     </ContainerView>

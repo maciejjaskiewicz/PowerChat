@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PowerChat.Application.Common.Interfaces;
-using PowerChat.Common;
 using PowerChat.Common.Interfaces;
 using PowerChat.Domain.Common;
 using PowerChat.Domain.Entities;
@@ -15,6 +14,7 @@ namespace PowerChat.Persistence
     public class PowerChatDbContext : IdentityDbContext<User, IdentityRole<long>, long>, IPowerChatDbContext
     {
         public DbSet<Channel> Channels { get; set;  }
+        public DbSet<Friendship> Friendships { get; set; }
 
         private readonly IDateTime _dateTime;
 

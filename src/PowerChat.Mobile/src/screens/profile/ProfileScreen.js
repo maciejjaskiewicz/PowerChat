@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, RefreshControl, Alert } from 'react-native';
 import {
   Icon,
@@ -46,7 +46,7 @@ const profileScreen = props => {
   ];
 
   const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await dispatch(profileActions.fetchProfile());
     setRefreshing(false);
