@@ -25,7 +25,11 @@ const profileInfo = (props) => {
         {props.name}
       </Text>
       <View style={themedStyle.genderContainer}>
-        <Ionicons name="md-female" size={14} color="white" />
+        <Ionicons 
+          name={props.gender === 'Male' ? 'md-male' : "md-female"}  
+          size={14} 
+          color="white" 
+        />
         <Text style={themedStyle.genderText} appearance='hint' category='p2'>{props.gender}</Text>
       </View>
     </View>

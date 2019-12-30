@@ -16,6 +16,7 @@ import Api from './../../constants/Api';
 import { authorized, handleUnauthorized } from './../../utils/auth';
 import { UserProfileModel } from './../../models/profile/UserProfileModel'; 
 import * as friendsActions from './../../store/actions/friends';
+import * as chatActions from './../../store/actions/chat';
 
 const loadFriendProfile = async (id, state) => {
   if(!authorized(state)) {
@@ -61,6 +62,7 @@ const friendProfileScreen = props => {
   const authState = useSelector(state => state.auth);
 
   const profileId = props.navigation.getParam('userId');
+  const fromChat = props.navigation.getParam('fromChat');
   const [profile, setProfile] = useState(UserProfileModel.empty());
 
   const [isLoading, setIsLoading] = useState(false);
@@ -111,6 +113,20 @@ const friendProfileScreen = props => {
     ]);
   }
 
+  const onMessage = useCallback(async (userId) => {
+    if(fromChat) {
+      props.navigation.goBack();
+      return;
+    }
+
+    setIsLoading(true);
+    const conversation = await dispatch(chatActions.getUserConversation(userId));
+    setIsLoading(false);
+
+    props.navigation.navigate('chat', { conversationPreview: conversation });
+    
+  }, [isLoading, dispatch])
+
   const backIcon = style => <Icon {...style} name='arrow-back'/>;
   const renderLeftControls = () => [
     <TopNavigationAction icon={backIcon} onPress={() => {
@@ -130,6 +146,7 @@ const friendProfileScreen = props => {
         profileModel={profile}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         onAddFriend={onAddFriendHandler}
+        onMessage={() => onMessage(profile.id)}
       />
     );
   }

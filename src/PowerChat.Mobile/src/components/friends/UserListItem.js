@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Avatar, Icon, Text, Button, withStyles } from '@ui-kitten/components';
+import { Ionicons } from '@expo/vector-icons';
 
 import TextStyle from './../../constants/TextStyle';
 
@@ -28,6 +29,20 @@ const userListItem = props => {
         </View>
         <View style={themedStyle.nameContainer}>
           <Text style={TextStyle.subtitle}>{props.userPreviewModel.name}</Text>
+          <View style={themedStyle.genderContainer}>
+            <Ionicons 
+              name={props.userPreviewModel.gender === 'Male' ? 'md-male' : "md-female"} 
+              size={10}
+              color='#8F9BB3'
+            />
+            <Text 
+              style={themedStyle.genderText} 
+              appearance='hint' 
+              category='c1' 
+              adjustsFontSizeToFit={true}>
+              {props.userPreviewModel.gender}
+            </Text>
+          </View>
         </View>
       </View>
       <View style={themedStyle.rightSection}>
@@ -60,5 +75,12 @@ export default withStyles(userListItem, theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  genderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  genderText: {
+    marginLeft: 4
   }
 }))

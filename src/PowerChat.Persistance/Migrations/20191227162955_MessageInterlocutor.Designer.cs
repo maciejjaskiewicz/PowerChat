@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PowerChat.Persistence;
 
 namespace PowerChat.Persistence.Migrations
 {
     [DbContext(typeof(PowerChatDbContext))]
-    partial class PowerChatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191227162955_MessageInterlocutor")]
+    partial class MessageInterlocutor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

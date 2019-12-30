@@ -11,6 +11,14 @@ namespace PowerChat.Persistence.Configurations
 
             builder.Property(x => x.Name)
                 .HasMaxLength(256);
+
+            builder.HasMany(c => c.Interlocutors)
+                .WithOne(i => i.Channel)
+                .HasForeignKey(i => i.ChannelId);
+
+            builder.HasMany(c => c.Messages)
+                .WithOne(m => m.Channel)
+                .HasForeignKey(m => m.ChannelId);
         }
     }
 }

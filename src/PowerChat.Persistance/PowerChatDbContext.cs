@@ -15,6 +15,8 @@ namespace PowerChat.Persistence
     {
         public DbSet<Channel> Channels { get; set;  }
         public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<Interlocutor> Interlocutors { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         private readonly IDateTime _dateTime;
 

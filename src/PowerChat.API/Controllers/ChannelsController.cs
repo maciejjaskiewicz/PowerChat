@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PowerChat.Application.Channels.Commands.CreateChannel;
+using PowerChat.Application.Channels.Commands.SendChannelMessage;
+using PowerChat.Application.Channels.Queries.GetChannel;
 using PowerChat.Application.Channels.Queries.GetChannelsList;
 
 namespace PowerChat.API.Controllers
@@ -17,24 +17,41 @@ namespace PowerChat.API.Controllers
         { }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [Route("")]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var model = await Mediator.Send(new GetChannelsListQuery());
+            var result = await Mediator.Send(new GetChannelsQuery(), cancellationToken);
 
-            return Ok(Json(model));
+            return Json(result);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> Get(long id, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new GetChannelQuery {Id = id}, cancellationToken);
+
+            return Json(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(CancellationToken cancellationToken)
+        [Route("{id}/messages")]
+        public async Task<IActionResult> Send(long id, [FromBody]SendMessageRequestBody body, CancellationToken cancellationToken)
         {
-            var createChannelCommand = new CreateChannelCommand
+            var sendMessageCommand = new SendChannelMessageCommand
             {
-                Name = Guid.NewGuid().ToString()
+                ChannelId = id,
+                Content = body.Content
             };
+            var result = await Mediator.Send(sendMessageCommand, cancellationToken);
+            var messageId = result.GetValueOrThrow();
 
-            var id = await Mediator.Send(createChannelCommand, cancellationToken);
+            return Json(messageId);
+        }
 
-            return Ok(Json(id));
+        public class SendMessageRequestBody
+        {
+            public string Content { get; set; }
         }
     }
 }

@@ -16,6 +16,7 @@ import SafeAreaLayout, { SafeAreaInset } from '../../components/UI/view/SafeArea
 import TextStyle from './../../constants/TextStyle';
 import UserListItem from './../../components/friends/UserListItem';
 import * as friendsActions from './../../store/actions/friends';
+import * as chatActions from './../../store/actions/chat';
 
 const friendsScreen = props => {
   const { themedStyle, style, ...restProps } = props;
@@ -40,6 +41,15 @@ const friendsScreen = props => {
     await dispatch(friendsActions.fetchFriends());
     setRefreshing(false);
   }, [refreshing]);
+
+  const onMessage = useCallback(async (userId) => {
+    setIsLoading(true);
+    const conversation = await dispatch(chatActions.getUserConversation(userId));
+    setIsLoading(false);
+
+    props.navigation.navigate('chat', { conversationPreview: conversation });
+    
+  }, [isLoading, dispatch])
 
   const addIcon = style => <Icon {...style} name='person-add'/>;
   const renderRightControls = () => [
@@ -71,7 +81,9 @@ const friendsScreen = props => {
               }>
               <Button 
                 icon={style => <Icon {...style} name='message-circle'/>}
-                size='small' />
+                size='small' 
+                onPress={() => onMessage(itemData.item.id)}
+                />
             </UserListItem>
           }
         />

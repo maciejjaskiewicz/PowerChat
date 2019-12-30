@@ -44,7 +44,7 @@ const profileScreen = props => {
             textStyle={TextStyle.button}
             appearance={!props.profileModel.isFriend ? 'outline' : 'filled'}
             icon={(style) => <Icon {...style} name='message-circle' />}
-            onPress={() => {}}>
+            onPress={props.onMessage}>
             MESSAGE
           </Button>
         </View>

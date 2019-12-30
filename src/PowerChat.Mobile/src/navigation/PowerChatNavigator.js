@@ -8,7 +8,8 @@ import { Icon, BottomNavigation, BottomNavigationTab } from '@ui-kitten/componen
 import BootScreen from './../screens/BootScreen';
 import SignInScreen from './../screens/auth/SignInScreen';
 import SignUpScreen from './../screens/auth/SignUpScreen';
-import ChannelsScreen from './../screens/chat/ChannelsScreen';
+import ConversationsScreen from '../screens/chat/ConversationsScreen';
+import ChatScreen from './../screens/chat/ChatScreen';
 import FriendsScreen from './../screens/friends/FriendsScreen';
 import FriendProfileScreen from '../screens/friends/FriendProfileScreen';
 import AddFriendScreen from './../screens/friends/AddFriendScreen';
@@ -26,7 +27,9 @@ const authNavigator = createStackNavigator({
 });
 
 const chatNavigator = createStackNavigator({
-  channels: ChannelsScreen
+  conversations: ConversationsScreen,
+  chat: ChatScreen,
+  profile: FriendProfileScreen
 }, {
   headerMode: 'none',
   navigationOptions: {
@@ -34,11 +37,40 @@ const chatNavigator = createStackNavigator({
   }
 });
 
+chatNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  for (let i = 0; i < navigation.state.routes.length; i++) {
+    if (navigation.state.routes[i].routeName == "chat" ||
+        navigation.state.routes[i].routeName == "profile") {
+      tabBarVisible = false;
+    }
+  }
+
+  return {
+    tabBarVisible
+  };
+};
+
+
 const friendsNavigator = createStackNavigator({
   friends: FriendsScreen,
   addFriend: AddFriendScreen,
-  friendProfile: FriendProfileScreen
+  friendProfile: FriendProfileScreen,
+  chat: ChatScreen
 }, { headerMode: 'none' });
+
+friendsNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  for (let i = 0; i < navigation.state.routes.length; i++) {
+    if (navigation.state.routes[i].routeName == "chat") {
+      tabBarVisible = false;
+    }
+  }
+
+  return {
+    tabBarVisible
+  };
+};
 
 const profileNavigator = createStackNavigator({
   profile: ProfileScreen,
