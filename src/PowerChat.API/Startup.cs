@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PowerChat.API.Framework.Middleware;
+using PowerChat.API.Hubs;
 using PowerChat.API.IoC;
 using Serilog;
 
@@ -23,6 +24,8 @@ namespace PowerChat.API
         {
             services.AddControllers()
                 .AddNewtonsoftJson();
+
+            services.AddSignalR();
 
             AspNetRegistration.Register(services, Configuration);
         }
@@ -51,8 +54,8 @@ namespace PowerChat.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapControllers();
-                endpoints.MapControllerRoute("default", "{controller=Channels}");
             });
         }
     }

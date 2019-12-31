@@ -10,6 +10,7 @@ export const GET_USER_CONVERSATION = 'GET_USER_CONVERSATION';
 export const FETCH_CHAT = 'FETCH_CHAT';
 export const PRESEND_MESSAGE = 'PRESEND_MESSAGE';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 
 export const fetchConversations = () => {
   return async (dispatch, getState) => {
@@ -178,4 +179,14 @@ export const sendMessage = (channelId, message) => {
       message: message
     });
   }
+}
+
+export const registerSignalRChatCommands = (store, connection) => {
+  connection.on('ReceiveMessage', data => {
+    store.dispatch({
+      type: RECEIVE_MESSAGE, 
+      channelId: data.channelId, 
+      message: data.message 
+    });
+  })
 }

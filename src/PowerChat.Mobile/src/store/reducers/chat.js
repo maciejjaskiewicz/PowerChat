@@ -3,7 +3,8 @@ import {
   GET_USER_CONVERSATION,
   FETCH_CHAT,
   PRESEND_MESSAGE,
-  SEND_MESSAGE
+  SEND_MESSAGE,
+  RECEIVE_MESSAGE
 } from './../actions/chat'
 
 import { ChatModel }  from './../../models/chat/ChatModel';
@@ -42,35 +43,13 @@ const fetchChatHandler = (state = initialState, action) => {
 }
 
 const presendMessageHandler = (state = initialState, action) => {
-  const channelId = action.channelId;
-  const existingChannelIdx = state.chats.findIndex(x => x.id == channelId);
-
-  if(existingChannel === -1) {
-    return state;
-  }
-
-  const existingChannel = state.chats[existingChannelIdx];
-  const updatedChannel = new ChatModel(
-    existingChannel.id,
-    existingChannel.name,
-    existingChannel.interlocutor,
-    [...existingChannel.messages, action.message]
-  );
-
-  const updatedChats = [...state.chats];
-  updatedChats[existingChannelIdx] = updatedChannel;
-
-  return {
-    ...state,
-    chats: updatedChats,
-    conversations: updateConversations(state, channelId, action.message)
-  }
+  return addMessage(state, action.channelId, action.message);
 };
 
 const sendMessageHandler = (state = initialState, action) => {
   const channelId = action.channelId;
   const presendMessageId = action.presendId;
-  const existingChannelIdx = state.chats.findIndex(x => x.id == channelId);
+  const existingChannelIdx = state.chats.findIndex(x => x.id === channelId);
 
   if(existingChannel === -1) {
     return state;
@@ -98,6 +77,35 @@ const sendMessageHandler = (state = initialState, action) => {
     conversations: updateConversations(state, channelId, action.message)
   }
 };
+
+const receiveMessageHandler = (state = initialState, action) => {
+  return addMessage(state, action.channelId, action.message);
+}
+
+const addMessage = (state, channelId, message) => {
+  const existingChannelIdx = state.chats.findIndex(x => x.id === channelId);
+
+  if(existingChannelIdx === -1) {
+    return state;
+  }
+
+  const existingChannel = state.chats[existingChannelIdx];
+  const updatedChannel = new ChatModel(
+    existingChannel.id,
+    existingChannel.name,
+    existingChannel.interlocutor,
+    [...existingChannel.messages, message]
+  );
+
+  const updatedChats = [...state.chats];
+  updatedChats[existingChannelIdx] = updatedChannel;
+
+  return {
+    ...state,
+    chats: updatedChats,
+    conversations: updateConversations(state, channelId, message)
+  }
+}
 
 const updateConversations = (state, channelId, message) => {
   const existingConversationIdx = state.conversations.findIndex(x => x.id == channelId);
@@ -140,6 +148,7 @@ export default (state = initialState, action) => {
     case FETCH_CHAT: return fetchChatHandler(state, action);
     case PRESEND_MESSAGE: return presendMessageHandler(state, action);
     case SEND_MESSAGE: return sendMessageHandler(state, action);
+    case RECEIVE_MESSAGE: return receiveMessageHandler(state, action);
   }
 
   return state;

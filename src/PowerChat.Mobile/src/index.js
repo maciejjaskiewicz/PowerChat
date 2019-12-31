@@ -17,6 +17,9 @@ import AuthReducer from './store/reducers/auth';
 import ChatReducer from './store/reducers/chat';
 import FriendsReducer from './store/reducers/friends';
 import ProfileReducer from './store/reducers/profile';
+import SignalRMiddleware from './store/middleware/signalRMiddleware';
+import SignalRService from './store/SignalRService';
+import { registerSignalRChatCommands } from './store/actions/chat';
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
@@ -36,8 +39,11 @@ const fetchFonts = () => {
 }
 
 const store = createStore(rootReducer, composeWithDevTools(
-  applyMiddleware(ReduxThunk)
+  applyMiddleware(ReduxThunk),
+  applyMiddleware(SignalRMiddleware)
 ));
+
+SignalRService.registerCommandFactry(store, registerSignalRChatCommands);
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);

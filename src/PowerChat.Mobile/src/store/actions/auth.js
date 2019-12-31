@@ -2,6 +2,7 @@ import Api from './../../constants/Api';
 import PowerChatError from './../../models/PowerChatError';
 import { AuthData } from '../../models/auth/AuthData';
 import { storeAuthData } from './../../utils/auth';
+import SignalRService from './../SignalRService';
 
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
@@ -50,6 +51,8 @@ export const signIn = (email, password) => {
       resData.expires
     );
 
+    SignalRService.connect(authData.token);
+
     dispatch({ type: SIGN_IN, sinInResponse: authData });
     storeAuthData(authData);
   };
@@ -96,9 +99,18 @@ export const signUp = (signUpModel) => {
 };
 
 export const signOut = () => {
-  return { type: SIGN_OUT };
+  return async dispatch => {
+    SignalRService.disconnect();
+    dispatch({ type: SIGN_OUT });
+  };
 };
 
 export const authenticate = (authData) => {
-  return { type: AUTHENTICATE, authData: authData };
+  return async dispatch => {
+    if(!SignalRService.isConnected()) {
+      SignalRService.connect(authData.token);
+    }
+
+    dispatch({ type: AUTHENTICATE, authData: authData });
+  };
 };
