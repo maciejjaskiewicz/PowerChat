@@ -11,8 +11,8 @@ namespace PowerChat.API.Services
 {
     public interface IInternalConnectedUsersService : IConnectedUsersService
     {
-        void AddUser(string userId, string connectionId);
-        void RemoveUser(string userIdString);
+        long AddUser(string userId, string connectionId);
+        long? RemoveUser(string userIdString);
     }
 
     public class ConnectedUsersService : IInternalConnectedUsersService
@@ -38,15 +38,16 @@ namespace PowerChat.API.Services
             }
         }
 
-        public void AddUser(string userIdString, string connectionId)
+        public long AddUser(string userIdString, string connectionId)
         {
             if (string.IsNullOrEmpty(userIdString) == false)
             {
                 if (long.TryParse(userIdString, out var userId))
                 {
-                    _connectedUsers.Add(new ConnectedUser(userId, connectionId));
+                    if(_connectedUsers.All(x => x.UserId != userId))
+                        _connectedUsers.Add(new ConnectedUser(userId, connectionId));
 
-                    return;
+                    return userId;
                 }
             }
 
@@ -54,7 +55,7 @@ namespace PowerChat.API.Services
                 $"Failed to parse userId: {userIdString}");
         }
 
-        public void RemoveUser(string userIdString)
+        public long? RemoveUser(string userIdString)
         {
             ConnectedUser userToRemove = null;
 
@@ -70,6 +71,8 @@ namespace PowerChat.API.Services
             {
                 _connectedUsers.Remove(userToRemove);
             }
+
+            return userToRemove?.UserId;
         }
     }
 }

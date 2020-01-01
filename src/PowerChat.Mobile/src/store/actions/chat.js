@@ -48,7 +48,9 @@ export const fetchConversations = () => {
         channel.lastMessage,
         toLocal(channel.lastMessageDate),
         channel.seen,
-        toLocal(channel.createdDate)
+        channel.own,
+        toLocal(channel.createdDate),
+        channel.isOnline
       );
 
       conversations.push(conversationModel);
@@ -91,7 +93,9 @@ export const getUserConversation = (userId) => {
       resData.lastMessage,
       toLocal(resData.lastMessageDate),
       resData.seen,
-      toLocal(resData.createdDate)
+      resData.own,
+      toLocal(resData.createdDate),
+      resData.isOnline
     );
 
     dispatch({ type: GET_USER_CONVERSATION, conversation: conversationModel });
@@ -128,7 +132,9 @@ export const fetchChat = channelId => {
       resData.id,
       resData.name,
       resData.interlocutor,
-      resData.messages
+      resData.messages,
+      toLocal(resData.lastActive),
+      resData.isOnline
     );
 
     dispatch({ type: FETCH_CHAT, chat: chatModel });

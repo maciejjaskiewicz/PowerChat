@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PowerChat.Application.Channels.Models
 {
@@ -8,5 +9,7 @@ namespace PowerChat.Application.Channels.Models
         public string Name { get; set; }
         public InterlocutorModel Interlocutor { get; set; }
         public IEnumerable<MessageModel> Messages { get; set; }
+        public DateTime? LastActive { get; set; }
+        public bool IsOnline { get; set; }
     }
 }

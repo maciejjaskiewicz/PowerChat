@@ -15,6 +15,7 @@ namespace PowerChat.Domain.Entities
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public DateTime? LastActive { get; set; }
         public ICollection<Friendship> SentFriendshipRequests { get; set; }
         public ICollection<Friendship> ReceivedFriendshipsRequests { get; set; }
     }

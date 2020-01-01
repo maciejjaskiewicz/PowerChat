@@ -12,12 +12,15 @@ namespace PowerChat.Application.Users.Queries.GetUser
     {
         private readonly IPowerChatDbContext _dbContext;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IConnectedUsersService _connectedUsersService;
 
         public GetUserQueryHandler(IPowerChatDbContext dbContext, 
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService, 
+            IConnectedUsersService connectedUsersService)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
+            _connectedUsersService = connectedUsersService;
         }
 
         public async Task<UserModel> Handle(GetUserQuery request, CancellationToken cancellationToken)
@@ -36,10 +39,15 @@ namespace PowerChat.Application.Users.Queries.GetUser
                     About = x.About,
                     Friends = x.ReceivedFriendshipsRequests.Count() + x.SentFriendshipRequests.Count(),
                     IsFriend = x.ReceivedFriendshipsRequests.Any(f => f.RequestedById == currentUserId) ||
-                               x.SentFriendshipRequests.Any(f => f.RequestedToId == currentUserId)
+                               x.SentFriendshipRequests.Any(f => f.RequestedToId == currentUserId),
+                    LastActive = x.LastActive
+                    
                 })
                 .AsNoTracking()
                 .SingleAsync(cancellationToken);
+
+            user.IsOnline = _connectedUsersService.ConnectedUsers
+                .Any(x => x.UserId == user.Id);
 
             return user;
         }

@@ -39,7 +39,8 @@ export const fetchFriends = () => {
         friend.id,
         friend.name,
         friend.gender,
-        '' // TODO: avatar
+        '', // TODO: avatar
+        friend.isOnline
       );
 
       friends.push(friendModel);
@@ -93,7 +94,8 @@ export const addFriend = (id) => {
       userResData.id,
       userResData.fullName,
       userResData.gender,
-      '' // TODO: avatar
+      '', // TODO: avatar
+      userResData.isOnline
     );
 
     dispatch({

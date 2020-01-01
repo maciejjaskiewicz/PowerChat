@@ -11,6 +11,7 @@ import {
 import ContainerView from './../UI/view/ContainerView'
 import ProfileInfo from './ProfileInfo';
 import TextStyle from './../../constants/TextStyle'
+import { toTimeAgo } from './../../utils/date';
 
 const profileScreen = props => {
   const { themedStyle, style, ...restProps } = props;
@@ -63,7 +64,12 @@ const profileScreen = props => {
           <View 
             activeOpacity={0.65}
             style={[themedStyle.parameterContainer, themedStyle.marginLeft]}>
-              <Text style={themedStyle.valueLabel}>{`1h ago`}</Text>
+              <Text style={themedStyle.valueLabel}>
+                {props.profileModel.isOnline ?
+                  'just now' :
+                  toTimeAgo(props.profileModel.lastActive)
+                }
+              </Text>
               <Text
                 style={themedStyle.hintLabel}
                 appearance='hint'
@@ -140,6 +146,7 @@ export default withStyles(profileScreen, theme => ({
   profileSectionContent: {
     marginTop: 8,
     marginHorizontal: 16,
+    marginBottom: 24,
     ...TextStyle.paragraph
   }
 }));

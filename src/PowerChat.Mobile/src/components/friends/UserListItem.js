@@ -26,6 +26,10 @@ const userListItem = props => {
           <Avatar
             source={imageSource}
             style={themedStyle.avatar}/>
+            {props.userPreviewModel.isOnline ?
+              <View style={themedStyle.onlineIndicator}/> :
+              null
+            }
         </View>
         <View style={themedStyle.nameContainer}>
           <Text style={TextStyle.subtitle}>{props.userPreviewModel.name}</Text>
@@ -82,5 +86,15 @@ export default withStyles(userListItem, theme => ({
   },
   genderText: {
     marginLeft: 4
+  },
+  onlineIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme['color-success-default'],
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    bottom: 2,
+    right: 18,
   }
 }))

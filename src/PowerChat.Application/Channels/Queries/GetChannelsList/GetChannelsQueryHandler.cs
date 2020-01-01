@@ -13,12 +13,15 @@ namespace PowerChat.Application.Channels.Queries.GetChannelsList
     {
         private readonly IPowerChatDbContext _dbContext;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IConnectedUsersService _connectedUsersService;
 
         public GetChannelsQueryHandler(IPowerChatDbContext dbContext, 
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService, 
+            IConnectedUsersService connectedUsersService)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
+            _connectedUsersService = connectedUsersService;
         }
 
         public async Task<IList<ChannelPreviewModel>> Handle(GetChannelsQuery request, CancellationToken cancellationToken)
@@ -30,17 +33,25 @@ namespace PowerChat.Application.Channels.Queries.GetChannelsList
                 .Select(c => new ChannelPreviewModel
                 {
                     Id = c.Id,
+                    InterlocutorUserId = c.Interlocutors.Single(i => i.UserId != currentUserId).UserId,
                     Name = c.Interlocutors.Single(i => i.UserId != currentUserId).User.Name.FullName,
                     Gender = c.Interlocutors.Single(i => i.UserId != currentUserId).User.Gender.ToString(),
                     LastMessage = c.Messages.OrderBy(m => m.CreatedDate).Last().Content,
                     LastMessageDate = c.Messages.OrderBy(m => m.CreatedDate).Last().CreatedDate,
                     Seen = c.Messages.OrderBy(m => m.CreatedDate).Last().Seen != null,
+                    Own = c.Messages.OrderBy(m => m.CreatedDate).Last().SenderId == currentUserId,
                     CreatedDate = c.CreatedDate
                 })
                 .OrderByDescending(c => c.LastMessageDate)
                     .ThenByDescending(c => c.CreatedDate)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
+
+            foreach (var channel in channels)
+            {
+                channel.IsOnline = _connectedUsersService.ConnectedUsers
+                    .Any(x => x.UserId == channel.InterlocutorUserId);
+            }
 
             return channels;
         }

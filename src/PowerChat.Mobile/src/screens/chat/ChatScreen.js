@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useCallback, createRef } from 'react';
+import React, { useEffect, useState, useCallback, createRef, useMemo } from 'react';
 import { 
   View,
-  KeyboardAvoidingView, 
-  Keyboard,
+  KeyboardAvoidingView,
   FlatList,
-  TouchableOpacity,
-  TouchableWithoutFeedback 
+  TouchableOpacity
 } from 'react-native';
 import { 
   Icon, 
@@ -25,6 +23,7 @@ import SafeAreaLayout, { SafeAreaInset } from '../../components/UI/view/SafeArea
 import ChatMessage from './../../components/chat/ChatMessage';
 import { MessageModel } from './../../models/chat/MessageModel';
 import * as chatActions from './../../store/actions/chat';
+import { toTimeAgo } from './../../utils/date';
 
 const chatScreen = props => {
   const { themedStyle, style, ...restProps } = props;
@@ -32,9 +31,9 @@ const chatScreen = props => {
 
   const [inputMessage, setInputMessage] = useState("");
   const conversationPreview = props.navigation.getParam("conversationPreview");
-  const chat = useSelector(state => 
-    state.chat.chats.find(x => x.id === conversationPreview.id)
-  );
+  const chat = useSelector(state => state.chat.chats
+    .find(x => x.id === conversationPreview.id));
+  const messages = chat && chat.messages ? chat.messages : [];
 
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -54,27 +53,29 @@ const chatScreen = props => {
     }, 0);
   }
 
-  const renderMessage = itemData => {
-    return <ChatMessage
-      style={themedStyle.message} 
-      message={itemData.item} />
+  const RenderMessage = props => {
+    return useMemo(() => (
+      <ChatMessage
+        style={themedStyle.message} 
+        message={props.itemData.item} />
+    ), [props.itemData.item.id]);
   }
 
   const onMessageChange = text => {
     setInputMessage(text);
   }
 
-  const onSendMessage = useCallback(async (userId) => {
+  const onSendMessage = () => {
     const messageModel = new MessageModel(null, null, inputMessage,
       null, null, true);
 
     try {
-      await dispatch(chatActions.sendMessage(chat.id, messageModel));
+      dispatch(chatActions.sendMessage(chat.id, messageModel));
       setInputMessage("");
     } catch(err) {
       // TODO
     }
-  }, [inputMessage, setInputMessage, dispatch])
+  }
 
   let imageSource = require('./../../assets/images/avatar-male.png');
 
@@ -101,6 +102,10 @@ const chatScreen = props => {
       }
     }}>
       <Avatar source={imageSource} />
+      {chat && chat.isOnline ?
+        <View style={themedStyle.onlineIndicator}/> :
+        null
+      }
     </TouchableOpacity>
   ];
 
@@ -108,6 +113,20 @@ const chatScreen = props => {
     <View style={themedStyle.loadingContainer}>
       <Spinner size="giant" />
     </View>
+  );
+
+  const messagesList = (
+    useMemo(() => (
+      <FlatList 
+        ref={listRef}
+        removeClippedSubviews={true}
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={themedStyle.chatContainer}
+        data={messages}
+        onContentSizeChange={onListContentSizeChange}
+        renderItem={(itemData) => <RenderMessage itemData={itemData} />}
+      />
+    ), [messages])
   );
 
   if(!isLoading) {
@@ -123,15 +142,7 @@ const chatScreen = props => {
         {!chat || chat.messages.length === 0 ?
           <View style={themedStyle.center}>
             <Text>You haven't talked yet</Text>
-          </View> :
-          <FlatList 
-            ref={listRef}
-            keyExtractor={item => item.id.toString()}
-            contentContainerStyle={themedStyle.chatContainer}
-            data={chat.messages}
-            onContentSizeChange={onListContentSizeChange}
-            renderItem={renderMessage}
-          />
+          </View> : messagesList
         }
         <View style={themedStyle.inputContainer}>
           <Button
@@ -160,11 +171,19 @@ const chatScreen = props => {
     );
   }
 
+  let subtitleText = null;
+
+  if(chat && chat.isOnline) {
+    subtitleText = `Last seen just now`;
+  } else if(chat && chat.lastActive) {
+    subtitleText = `Last seen ${toTimeAgo(chat.lastActive)}`;
+  }
+
   return (
     <SafeAreaLayout style={themedStyle.flex1} insets={SafeAreaInset.TOP}>
       <TopNavigation 
         title={conversationPreview.name}
-        subtitle='Last seen 1h ago' 
+        subtitle={subtitleText} 
         alignment='center'
         titleStyle={themedStyle.headerText}
         rightControls={renderRightControls()}
@@ -223,5 +242,15 @@ export default withStyles(chatScreen, theme => ({
   },
   message: {
     marginVertical: 12
+  },
+  onlineIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme['color-success-default'],
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    bottom: 2,
+    right: 2,
   }
 }));

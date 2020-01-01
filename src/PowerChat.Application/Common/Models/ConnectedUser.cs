@@ -10,10 +10,5 @@
             UserId = userId;
             ConnectionId = connectionId;
         }
-
-        public override int GetHashCode()
-        {
-            return 16769023 * UserId.GetHashCode();
-        }
     }
 }

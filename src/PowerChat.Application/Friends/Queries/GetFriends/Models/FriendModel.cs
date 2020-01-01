@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public string Gender { get; set; }
         public bool Approved { get; set; }
+        public bool IsOnline { get; set; }
     }
 }

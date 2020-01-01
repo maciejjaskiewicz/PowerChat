@@ -1,4 +1,6 @@
-﻿namespace PowerChat.Application.Users.Queries.GetUser.Models
+﻿using System;
+
+namespace PowerChat.Application.Users.Queries.GetUser.Models
 {
     public class UserModel
     {
@@ -10,5 +12,7 @@
         public string About { get; set; }
         public bool IsFriend { get; set; }
         public int Friends { get; set; }
+        public DateTime? LastActive { get; set; }
+        public bool IsOnline { get; set; }
     }
 }

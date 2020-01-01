@@ -1,12 +1,16 @@
+using System.Net;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PowerChat.API.Framework.Middleware;
 using PowerChat.API.Hubs;
 using PowerChat.API.IoC;
+using PowerChat.Persistence;
 using Serilog;
 
 namespace PowerChat.API
@@ -22,6 +26,12 @@ namespace PowerChat.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownProxies.Add(IPAddress.Parse("172.31.47.19"));
+            });
+            services.AddCors();
+
             services.AddControllers()
                 .AddNewtonsoftJson();
 
@@ -43,8 +53,18 @@ namespace PowerChat.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             //app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+            );
 
             app.UseRouting();
             app.UseExceptionsHandler();
@@ -57,6 +77,9 @@ namespace PowerChat.API
                 endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapControllers();
             });
+
+            var dbContext = app.ApplicationServices.GetService<PowerChatDbContext>();
+            dbContext.Database.Migrate();
         }
     }
 }

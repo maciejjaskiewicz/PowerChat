@@ -59,6 +59,10 @@ const conversationPreiew = props => {
           <Avatar
             source={imageSource}
             style={themedStyle.avatar}/>
+          {props.conversationPreviewModel.isOnline ?
+            <View style={themedStyle.onlineIndicator}/> :
+            null
+          }
         </View>
         <View style={themedStyle.nameContainer}>
           <Text style={TextStyle.subtitle} category='s2'>{props.conversationPreviewModel.name}</Text>
@@ -69,12 +73,13 @@ const conversationPreiew = props => {
             adjustsFontSizeToFit={true}>
             {!props.conversationPreviewModel.lastMessage ?
             "You haven't talked yet" :
+            (props.conversationPreviewModel.own ? 'Me: ' : '') +
             truncate(props.conversationPreviewModel.lastMessage, 30, true)}
           </Text>
         </View>
       </View>
       <View style={themedStyle.rightSection}>
-        {renderMessageStatusImage()}
+        {props.conversationPreviewModel.own ? renderMessageStatusImage() : null}
         <Text
           style={themedStyle.dateLabel}
           appearance='hint'
@@ -122,5 +127,15 @@ export default withStyles(conversationPreiew, theme => ({
   },
   messageIndicatorIconDelivered: {
     tintColor: theme['text-hint-color'],
+  },
+  onlineIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme['color-success-default'],
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    bottom: 2,
+    right: 18,
   }
 }))

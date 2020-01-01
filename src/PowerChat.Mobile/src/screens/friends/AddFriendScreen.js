@@ -53,7 +53,8 @@ const loadUsers = async (searchStr, authState) => {
       user.id,
       user.name,
       user.gender,
-      '' // TODO: avatar
+      '', // TODO: avatar,
+      user.isOnline
     );
 
     users.push(userModel);

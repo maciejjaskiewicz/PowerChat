@@ -14,12 +14,15 @@ namespace PowerChat.Application.Channels.Queries.GetChannel
     {
         private readonly IPowerChatDbContext _dbContext;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IConnectedUsersService _connectedUsersService;
 
         public GetChannelQueryHandler(IPowerChatDbContext dbContext, 
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService, 
+            IConnectedUsersService connectedUsersService)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
+            _connectedUsersService = connectedUsersService;
         }
 
         public async Task<ChannelModel> Handle(GetChannelQuery request, CancellationToken cancellationToken)
@@ -54,10 +57,14 @@ namespace PowerChat.Application.Channels.Queries.GetChannel
                             SentDate = m.CreatedDate,
                             Seen = m.Seen,
                             Own = m.SenderId == currentUserId
-                        })
+                        }),
+                    LastActive = x.Interlocutors.Single(i => i.UserId != currentUserId).User.LastActive
                 })
                 .AsNoTracking()
                 .SingleAsync(cancellationToken);
+
+            channel.IsOnline = _connectedUsersService.ConnectedUsers
+                .Any(x => x.UserId == channel.Interlocutor.Id);
 
             return channel;
         }

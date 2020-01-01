@@ -13,12 +13,15 @@ namespace PowerChat.Application.Friends.Queries.GetFriends
     {
         private readonly IPowerChatDbContext _dbContext;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IConnectedUsersService _connectedUsersService;
 
         public GetFriendsQueryHandler(IPowerChatDbContext dbContext, 
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService, 
+            IConnectedUsersService connectedUsersService)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
+            _connectedUsersService = connectedUsersService;
         }
 
         public async Task<IList<FriendModel>> Handle(GetFriendsQuery request, CancellationToken cancellationToken)
@@ -50,6 +53,12 @@ namespace PowerChat.Application.Friends.Queries.GetFriends
                 .ToListAsync(cancellationToken);
 
             var friends = requestedBy.Union(requestedTo).ToList();
+
+            foreach (var friend in friends)
+            {
+                friend.IsOnline = _connectedUsersService.ConnectedUsers
+                    .Any(x => x.UserId == friend.Id);
+            }
 
             return friends;
         }

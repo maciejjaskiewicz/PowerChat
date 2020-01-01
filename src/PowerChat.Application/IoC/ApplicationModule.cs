@@ -8,6 +8,7 @@ namespace PowerChat.Application.IoC
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule<PipelineModule>();
+            builder.RegisterModule<ServiceModule>();
         }
     }
 }

@@ -65,7 +65,9 @@ const sendMessageHandler = (state = initialState, action) => {
     existingChannel.id,
     existingChannel.name,
     existingChannel.interlocutor,
-    updatedMessages
+    updatedMessages,
+    existingChannel.lastActive,
+    existingChannel.isOnline
   );
 
   const updatedChats = [...state.chats];
@@ -94,7 +96,9 @@ const addMessage = (state, channelId, message) => {
     existingChannel.id,
     existingChannel.name,
     existingChannel.interlocutor,
-    [...existingChannel.messages, message]
+    [...existingChannel.messages, message],
+    existingChannel.lastActive,
+    existingChannel.isOnline
   );
 
   const updatedChats = [...state.chats];
@@ -108,7 +112,7 @@ const addMessage = (state, channelId, message) => {
 }
 
 const updateConversations = (state, channelId, message) => {
-  const existingConversationIdx = state.conversations.findIndex(x => x.id == channelId);
+  const existingConversationIdx = state.conversations.findIndex(x => x.id === channelId);
   const existingConversation = state.conversations[existingConversationIdx];
 
   const updatedConversation = new ConversationPreviewModel(
@@ -118,7 +122,9 @@ const updateConversations = (state, channelId, message) => {
     message.content,
     message.sentDate,
     message.seen,
-    existingConversation.createdDate
+    message.own,
+    existingConversation.createdDate,
+    existingConversation.isOnline
   );
 
   const updatedConversations = [...state.conversations];

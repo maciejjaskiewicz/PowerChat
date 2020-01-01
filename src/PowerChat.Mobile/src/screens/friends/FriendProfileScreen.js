@@ -17,6 +17,7 @@ import { authorized, handleUnauthorized } from './../../utils/auth';
 import { UserProfileModel } from './../../models/profile/UserProfileModel'; 
 import * as friendsActions from './../../store/actions/friends';
 import * as chatActions from './../../store/actions/chat';
+import { toLocal } from './../../utils/date';
 
 const loadFriendProfile = async (id, state) => {
   if(!authorized(state)) {
@@ -51,7 +52,9 @@ const loadFriendProfile = async (id, state) => {
     resData.about,
     '', // TODO: avatar
     resData.isFriend,
-    resData.friends
+    resData.friends,
+    toLocal(resData.lastActive),
+    resData.isOnline
   );
   return profileModel;
 }

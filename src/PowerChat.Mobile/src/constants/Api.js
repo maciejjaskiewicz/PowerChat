@@ -1,3 +1,3 @@
 export default {
-  url: 'http://192.168.8.101:5001'
+  url: 'http://18.194.213.104/powerchat'
 }

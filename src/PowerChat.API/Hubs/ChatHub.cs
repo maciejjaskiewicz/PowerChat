@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PowerChat.API.Services;
+using PowerChat.Application.Users.Services;
 
 namespace PowerChat.API.Hubs
 {
@@ -13,12 +14,15 @@ namespace PowerChat.API.Hubs
     {
         private readonly ILogger<ChatHub> _logger;
         private readonly IInternalConnectedUsersService _connectedUsersService;
+        private readonly IUserActivityService _userActivityService;
 
         public ChatHub(ILogger<ChatHub> logger, 
-            IInternalConnectedUsersService connectedUsersService)
+            IInternalConnectedUsersService connectedUsersService, 
+            IUserActivityService userActivityService)
         {
             _logger = logger;
             _connectedUsersService = connectedUsersService;
+            _userActivityService = userActivityService;
         }
 
         public override async Task OnConnectedAsync()
@@ -37,7 +41,12 @@ namespace PowerChat.API.Hubs
             var userIdString = Context?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             var connectionId = Context?.ConnectionId;
 
-            _connectedUsersService.RemoveUser(userIdString);
+            var userId = _connectedUsersService.RemoveUser(userIdString);
+
+            if (userId.HasValue)
+            {
+                await _userActivityService.UpdateActivity(userId.Value);
+            }
 
             _logger.LogInformation($"[SignalR] Disconnected: {connectionId}, userId: {userIdString}");
             await base.OnDisconnectedAsync(exception);

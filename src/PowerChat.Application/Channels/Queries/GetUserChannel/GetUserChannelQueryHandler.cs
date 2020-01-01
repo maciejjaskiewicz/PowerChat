@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PowerChat.Application.Channels.Commands.CreateUserChannel;
-using PowerChat.Application.Channels.Models;
 using PowerChat.Application.Channels.Queries.GetChannelsList.Models;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Domain.Entities;
@@ -16,14 +15,17 @@ namespace PowerChat.Application.Channels.Queries.GetUserChannel
         private readonly IPowerChatDbContext _dbContext;
         private readonly IMediator _mediator;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IConnectedUsersService _connectedUsersService;
 
         public GetUserChannelQueryHandler(IPowerChatDbContext dbContext, 
             IMediator mediator, 
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService, 
+            IConnectedUsersService connectedUsersService)
         {
             _dbContext = dbContext;
             _mediator = mediator;
             _currentUserService = currentUserService;
+            _connectedUsersService = connectedUsersService;
         }
 
         public async Task<ChannelPreviewModel> Handle(GetUserChannelQuery request, CancellationToken cancellationToken)
@@ -44,6 +46,7 @@ namespace PowerChat.Application.Channels.Queries.GetUserChannel
                 .Select(c => new ChannelPreviewModel
                 {
                     Id = c.Id,
+                    InterlocutorUserId = c.Interlocutors.Single(i => i.UserId != currentUserId).UserId,
                     Name = c.Interlocutors.Single(i => i.UserId != currentUserId).User.Name.FullName,
                     Gender = c.Interlocutors.Single(i => i.UserId != currentUserId).User.Gender.ToString(),
                     LastMessage = c.Messages.OrderBy(m => m.CreatedDate).Last().Content,
@@ -53,6 +56,9 @@ namespace PowerChat.Application.Channels.Queries.GetUserChannel
                 })
                 .AsNoTracking()
                 .SingleAsync(cancellationToken);
+
+            channel.IsOnline = _connectedUsersService.ConnectedUsers
+                .Any(x => x.UserId == channel.InterlocutorUserId);
 
             return channel;
         }
