@@ -23,11 +23,11 @@ export const toMessageDate = sentDateUtc => {
   if(now.getFullYear() === sentDate.getFullYear() && 
      now.getMonth() === sentDate.getMonth() &&
      now.getDate() === sentDate.getDate()) {
-    formatedSentDate = moment(sentDate).format('HH:MM');
+    formatedSentDate = moment(sentDate).format('HH:mm');
   } else {
     formatedSentDate = moment(sentDate).format('DD/MM/YY');
     formatedSentDate += "\n";
-    formatedSentDate += moment(sentDate).format('HH:MM');
+    formatedSentDate += moment(sentDate).format('HH:mm');
   }
 
   return formatedSentDate;
