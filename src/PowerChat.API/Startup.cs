@@ -31,6 +31,7 @@ namespace PowerChat.API
                 .AddNewtonsoftJson();
 
             services.AddSignalR();
+            services.AddSwaggerGen();
 
             AspNetRegistration.Register(services, Configuration);
         }
@@ -60,6 +61,12 @@ namespace PowerChat.API
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
             );
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PowerChat API");
+            });
 
             app.UseRouting();
             app.UseExceptionsHandler();
