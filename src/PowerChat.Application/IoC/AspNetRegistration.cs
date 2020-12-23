@@ -10,7 +10,7 @@ namespace PowerChat.Application.IoC
         public static void Register(IServiceCollection services)
         {
             // FluentValidation configuration
-            ValidatorOptions.LanguageManager.Enabled = false; 
+            ValidatorOptions.Global.LanguageManager.Enabled = false;
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             // MediatR configuration

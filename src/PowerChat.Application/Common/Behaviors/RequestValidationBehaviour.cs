@@ -21,7 +21,7 @@ namespace PowerChat.Application.Common.Behaviors
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, 
             RequestHandlerDelegate<TResponse> next)
         {
-            var context = new ValidationContext(request);
+            var context = new ValidationContext<TRequest>(request);
 
             var failures = _validators
                 .Select(async v => await v.ValidateAsync(context, cancellationToken))

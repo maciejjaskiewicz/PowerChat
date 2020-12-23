@@ -1,4 +1,3 @@
-using System.Net;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,10 +25,6 @@ namespace PowerChat.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.KnownProxies.Add(IPAddress.Parse("172.31.47.19"));
-            });
             services.AddCors();
 
             services.AddControllers()

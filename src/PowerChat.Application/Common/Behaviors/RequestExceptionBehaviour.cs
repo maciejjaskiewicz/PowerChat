@@ -25,13 +25,12 @@ namespace PowerChat.Application.Common.Behaviors
             catch (Exception e)
             {
                 if (e is PowerChatValidationException)
-                {
-                    throw e;
-                }
+                    throw;
 
                 var name = typeof(TRequest).Name;
                 _logger.LogError(e, $"PowerChat Request Error: {name}. {e.Message}");
-                throw e;
+
+                throw;
             }
         }
     }
