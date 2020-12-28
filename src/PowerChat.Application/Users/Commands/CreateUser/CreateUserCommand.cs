@@ -1,10 +1,12 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using PowerChat.Application.Common.Results;
 
 namespace PowerChat.Application.Users.Commands.CreateUser
 {
     public class CreateUserCommand : IRequest<ApplicationResult>
     {
+        public Guid IdentityId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

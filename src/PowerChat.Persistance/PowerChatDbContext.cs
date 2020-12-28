@@ -1,7 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PowerChat.Application.Common.Interfaces;
 using PowerChat.Common.Interfaces;
@@ -11,8 +9,9 @@ using PowerChat.Persistence.Configurations.Extensions;
 
 namespace PowerChat.Persistence
 {
-    public class PowerChatDbContext : IdentityDbContext<User, IdentityRole<long>, long>, IPowerChatDbContext
+    public class PowerChatDbContext : DbContext, IPowerChatDbContext
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<Channel> Channels { get; set;  }
         public DbSet<Friendship> Friendships { get; set; }
         public DbSet<Interlocutor> Interlocutors { get; set; }

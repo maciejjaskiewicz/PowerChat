@@ -19,6 +19,10 @@ namespace PowerChat.Application.Users.Commands.CreateUser
 
         private void Validate()
         {
+            RuleFor(x => x.IdentityId)
+                .NotEmpty()
+                .NotNull();
+
             RuleFor(x => x.FirstName)
                 .MaximumLength(100)
                 .NotEmpty();

@@ -31,8 +31,8 @@ namespace PowerChat.Application.Users.Commands.CreateUser
         {
             var user = new User
             {
+                IdentityId = request.IdentityId,
                 Email = request.Email,
-                UserName = request.Email,
                 Name = PersonName.Create(request.FirstName, request.LastName),
                 Gender = !string.IsNullOrEmpty(request.Gender) ? (Gender?)Enum.Parse<Gender>(request.Gender) : null,
                 LastActive = _dateTime.UtcNow

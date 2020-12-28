@@ -1,4 +1,5 @@
 using Autofac;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -30,8 +31,17 @@ namespace PowerChat.API
             services.AddControllers()
                 .AddNewtonsoftJson();
 
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = "https://localhost:44325";
+                    options.ApiName = "PowerChatAPI";
+                    options.ApiSecret = "PowerChatAPI";
+                });
+
             services.AddSignalR();
             services.AddSwaggerGen();
+            services.AddHttpContextAccessor();
 
             AspNetRegistration.Register(services, Configuration);
         }

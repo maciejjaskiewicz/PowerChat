@@ -9,13 +9,14 @@ namespace PowerChat.Persistence
     public abstract class DesignTimeDbContextFactoryBase<TContext> :
         IDesignTimeDbContextFactory<TContext> where TContext : DbContext
     {
-        private const string ConnectionStringName = "PowerChatDatabase";
+        protected abstract string ConnectionStringName { get; }
+        protected abstract string Project { get; }
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
 
         public TContext CreateDbContext(string[] args)
         {
             var pathSep = Path.DirectorySeparatorChar;
-            var basePath = Directory.GetCurrentDirectory() + $"{pathSep}..{pathSep}PowerChat.API";
+            var basePath = Directory.GetCurrentDirectory() + $"{pathSep}..{pathSep}{Project}";
 
             return Create(basePath, Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
         }
@@ -49,7 +50,6 @@ namespace PowerChat.Persistence
             return new ConfigurationBuilder()
                 .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.Local.json", optional: true)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();

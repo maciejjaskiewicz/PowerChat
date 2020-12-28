@@ -2,10 +2,10 @@
 
 namespace PowerChat.Persistence
 {
-    public class PowerChatDbContextFactory : DesignTimeDbContextFactoryBase<PowerChatDbContext>
+    public class PowerChatIdentityDbContextFactory : DesignTimeDbContextFactoryBase<PowerChatDbContext>
     {
-        protected override string ConnectionStringName { get; } = "PowerChatDatabase";
-        protected override string Project { get; } = "PowerChat.API";
+        protected override string ConnectionStringName { get; } = "IdentityDatabase";
+        protected override string Project { get; } = "PowerChat.IdentityServer";
 
         protected override PowerChatDbContext CreateNewInstance(DbContextOptions<PowerChatDbContext> options)
         {
