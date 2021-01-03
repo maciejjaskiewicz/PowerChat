@@ -1,9 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using PowerChat.Application.Common.Results;
-using PowerChat.Common;
 using PowerChat.Common.Interfaces;
-using PowerChat.Common.Results;
 using PowerChat.Domain.Entities;
 
 namespace PowerChat.Application.Common.Interfaces

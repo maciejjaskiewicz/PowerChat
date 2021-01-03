@@ -2,37 +2,30 @@
 
 namespace PowerChat.Domain.Common
 {
-    public interface IEntity<TId>
+    public interface IEntity
     {
-        TId Id { get; set; }
+        long Id { get; set; }
     }
 
-    public abstract class Entity<TId> : IEntity<TId>
+    public abstract class Entity : IEntity
     {
-        public TId Id { get; set; }
+        public long Id { get; set; }
     }
-    public abstract class Entity : Entity<long> { }
 
-    public interface IAuditableEntity<TId> : IEntity<TId>
+    public interface IAuditableEntity : IEntity
     {
         DateTime CreatedDate { get; set; }
         DateTime? ModifiedDate { get; set; }
     }
 
-    public interface IAuditableEntity : IAuditableEntity<long> { }
-
-    public abstract class AuditableEntity<TId> : Entity<TId>, IAuditableEntity<TId>
+    public abstract class AuditableEntity : Entity, IAuditableEntity
     {
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
     }
 
-    public abstract class AuditableEntity : AuditableEntity<long> { }
-
-    public interface IDeletableEntity<TId> : IEntity<TId>
+    public interface IDeletableEntity : IEntity
     {
         bool IsDeleted { get; set; }
     }
-
-    public interface IDeletableEntity : IDeletableEntity<long> { }
 }

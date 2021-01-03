@@ -37,7 +37,7 @@ namespace PowerChat.Infrastructure.Identity
             return await _userManager.FindByEmailAsync(email) != null;
         }
 
-        public async Task<ValidationResult> ValidatePasswordAsync(string password)
+        public async Task<Application.Common.Results.ValidationResult> ValidatePasswordAsync(string password)
         {
             var passwordErrors = new List<string>();
 

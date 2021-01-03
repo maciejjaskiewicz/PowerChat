@@ -6,7 +6,7 @@ using PowerChat.Domain.Common;
 namespace PowerChat.Persistence.Configurations
 {
     public abstract class EntityConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity>
-        where TEntity : class, IEntity<long> 
+        where TEntity : class, IEntity 
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {

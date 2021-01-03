@@ -1,11 +1,9 @@
 using System;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace PowerChat.API
+namespace PowerChat.Services.Identity.API
 {
     public class Program
     {
@@ -18,12 +16,12 @@ namespace PowerChat.API
 
             try
             {
-                Log.Debug("Starting up...");
+                Log.Debug("Starting up IdentityServer...");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Application start-up failed.");
+                Log.Fatal(ex, "IdentityServer start-up failed.");
             }
             finally
             {
@@ -35,7 +33,7 @@ namespace PowerChat.API
         {
             return Host.CreateDefaultBuilder(args)
                 .UseSerilog()
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseDefaultServiceProvider(options => options.ValidateScopes = false)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
