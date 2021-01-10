@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.Configuration;
-using RawRabbit.vNext;
+using RawRabbit.Instantiation;
 
 namespace PowerChat.Services.Common.Infrastructure.ServiceBus
 {
@@ -13,7 +13,11 @@ namespace PowerChat.Services.Common.Infrastructure.ServiceBus
             var options = new RawRabbitConfiguration();
             rabbitMqSection.Bind(options);
 
-            var client = BusClientFactory.CreateDefault(options);
+            var client = RawRabbitFactory.CreateSingleton(new RawRabbitOptions
+            {
+                ClientConfiguration = options
+            });
+
             services.AddSingleton<IBusClient>(_ => client);
         }
     }

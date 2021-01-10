@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using PowerChat.Services.Common.Infrastructure.Framework.Middleware;
 using PowerChat.Services.Identity.API.Framework;
 using PowerChat.Services.Identity.Infrastructure.Persistence;
+using Serilog;
 
 namespace PowerChat.Services.Identity.API
 {
@@ -69,8 +70,7 @@ namespace PowerChat.Services.Identity.API
             services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PowerChatIdentityDbContext identityDbContext, 
-            IResourceOwnerPasswordValidator valid)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PowerChatIdentityDbContext identityDbContext)
         {
             app.UseIdentityInitializer();
             identityDbContext.Database.Migrate();
@@ -83,6 +83,8 @@ namespace PowerChat.Services.Identity.API
             {
                 app.UseHsts();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseIdentityServer();
             app.UseHttpsRedirection();

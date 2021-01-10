@@ -1,26 +1,23 @@
-﻿using System.Threading;
+﻿using System;
+using System.Reflection;
+using System.Threading;
 using PowerChat.Services.Common.Application.Commands;
 using PowerChat.Services.Common.Application.Events;
 using RawRabbit;
+using RawRabbit.Configuration.Consumer;
+using RawRabbit.Pipe;
 
 namespace PowerChat.Services.Common.Infrastructure.ServiceBus
 {
     public static class ServiceBusExtensions
     {
-        public const string CommandQueueName = "powerchat-service-bus-commands";
-        public const string EventQueueName = "powerchat-service-bus-events";
-
         public static IBusClient WithCommandHandler<TCommand>(this IBusClient bus,
             ICommandHandler<TCommand> handler) where TCommand : ICommand
         {
-            bus.SubscribeAsync<TCommand>(async (msg, context) =>
-            {
-                await handler.Handle(msg, CancellationToken.None);
-            }, cfg =>
-            {
-                cfg.WithQueue(q => q.WithName(CommandQueueName));
-                cfg.WithSubscriberId(string.Empty);
-            });
+            bus.SubscribeAsync<TCommand>(msg => handler.Handle(msg, CancellationToken.None),
+                ctx => ctx.Properties.Add(PipeKey.ConfigurationAction,
+                    (Action<IConsumerConfigurationBuilder>)(cfg => cfg.FromDeclaredQueue(q 
+                        => q.WithName(GetQueueName<TCommand>())))));
 
             return bus;
         }
@@ -28,16 +25,14 @@ namespace PowerChat.Services.Common.Infrastructure.ServiceBus
         public static IBusClient WithEventHandler<TEvent>(this IBusClient bus,
             IEventHandler<TEvent> handler) where TEvent : IEvent
         {
-            bus.SubscribeAsync<TEvent>(async (msg, context) =>
-            {
-                await handler.Handle(msg, CancellationToken.None);
-            }, cfg =>
-            {
-                cfg.WithQueue(q => q.WithName(EventQueueName));
-                cfg.WithSubscriberId(string.Empty);
-            });
+            bus.SubscribeAsync<TEvent>(msg => handler.Handle(msg, CancellationToken.None),
+                ctx => ctx.Properties.Add(PipeKey.ConfigurationAction,
+                    (Action<IConsumerConfigurationBuilder>)(cfg => cfg.FromDeclaredQueue(q 
+                        => q.WithName(GetQueueName<TEvent>())))));
 
             return bus;
         }
+
+        private static string GetQueueName<T>() => $"{Assembly.GetEntryAssembly()?.GetName()}/{typeof(T).Name}";
     }
 }

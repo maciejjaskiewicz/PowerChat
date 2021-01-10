@@ -16,7 +16,7 @@ namespace PowerChat.Services.Identity.API
 
             try
             {
-                Log.Debug("Starting up IdentityServer...");
+                Log.Debug("Starting up Identity Service...");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)

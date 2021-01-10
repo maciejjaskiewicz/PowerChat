@@ -1,5 +1,4 @@
-﻿using System;
-using PowerChat.Services.Common.Application.Events;
+﻿using PowerChat.Services.Common.Application.Events;
 
 namespace PowerChat.Services.Common.Application.Contract.Identity
 {

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PowerChat.Services.Common.Infrastructure\PowerChat.Services.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\PowerChat.Services.Chat.Application\PowerChat.Services.Chat.Application.csproj" />
+  </ItemGroup>
+
+</Project>

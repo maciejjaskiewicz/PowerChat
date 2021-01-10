@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\PowerChat.Services.Common.Infrastructure\PowerChat.Services.Common.Infrastructure.csproj" />
     <ProjectReference Include="..\PowerChat.Services.Identity.Application\PowerChat.Services.Identity.Application.csproj" />
-    <ProjectReference Include="..\PowerChat.Services.Identity.Core\PowerChat.Services.Identity.Core.csproj" />
   </ItemGroup>
 
 </Project>
