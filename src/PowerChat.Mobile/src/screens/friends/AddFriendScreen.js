@@ -26,7 +26,7 @@ const loadUsers = async (searchStr, authState) => {
     return;
   }
 
-  const response = await fetch(`${Api.url}/users/search?searchStr=${searchStr}&excludeFriends=true`, {
+  const response = await fetch(`${Api.url}/users/users/search?searchStr=${searchStr}&excludeFriends=true`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using PowerChat.Services.Users.Application.Users.Models;
 
 namespace PowerChat.Services.Users.Application.Users.Services
 {
     public interface IConnectedUsersService
     {
-        IEnumerable<ConnectedUser> ConnectedUsers { get; }
-        Task SendAsync(long userId, string method, object payload);
+        bool IsConnected(string userIdentityId);
+        Task<bool> IsConnectedAsync(string userIdentityId, CancellationToken cancellationToken);
     }
 }

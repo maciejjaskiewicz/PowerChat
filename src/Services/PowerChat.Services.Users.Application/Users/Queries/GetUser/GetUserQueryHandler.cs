@@ -28,8 +28,8 @@ namespace PowerChat.Services.Users.Application.Users.Queries.GetUser
         public async Task<UserModel> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
             var currentUserIdentityId = _currentUserService.GetUserIdentityIdOrThrow();
-            var currentUserId = _dbContext.Users
-                .SingleAsync(x => x.IdentityId == currentUserIdentityId, cancellationToken)
+            var currentUserId = (await _dbContext.Users
+                .SingleAsync(x => x.IdentityId == currentUserIdentityId, cancellationToken))
                 .Id;
 
             var user = await _dbContext.Users
@@ -37,6 +37,7 @@ namespace PowerChat.Services.Users.Application.Users.Queries.GetUser
                 .Select(x => new UserModel
                 {
                     Id = x.Id,
+                    IdentityId = x.IdentityId,
                     Firstname = x.Name.FirstName,
                     Lastname = x.Name.LastName,
                     FullName = x.Name.FullName,
@@ -51,8 +52,7 @@ namespace PowerChat.Services.Users.Application.Users.Queries.GetUser
                 .AsNoTracking()
                 .SingleAsync(cancellationToken);
 
-            user.IsOnline = _connectedUsersService.ConnectedUsers
-                .Any(x => x.UserId == user.Id);
+            user.IsOnline = _connectedUsersService.IsConnected(user.IdentityId);
 
             return user;
         }

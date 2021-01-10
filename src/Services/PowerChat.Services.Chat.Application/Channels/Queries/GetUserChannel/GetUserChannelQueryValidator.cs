@@ -7,6 +7,7 @@ namespace PowerChat.Services.Chat.Application.Channels.Queries.GetUserChannel
     public class GetUserChannelQueryValidator : AbstractValidator<GetUserChannelQuery>
     {
         private readonly IUserService _userService;
+
         public GetUserChannelQueryValidator(IUserService userService)
         {
             _userService = userService;

@@ -7,10 +7,10 @@ namespace PowerChat.Services.Users.Application.Friends.Commands.AddFriend
 {
     public class AddFriendCommandValidator : AbstractValidator<AddFriendCommand>
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly ICurrentUserService _currentUserService;
 
-        public AddFriendCommandValidator(UserService userService, 
+        public AddFriendCommandValidator(IUserService userService, 
             ICurrentUserService currentUserService)
         {
             _userService = userService;

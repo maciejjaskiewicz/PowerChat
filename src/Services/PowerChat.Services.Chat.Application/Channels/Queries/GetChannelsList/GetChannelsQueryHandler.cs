@@ -35,6 +35,7 @@ namespace PowerChat.Services.Chat.Application.Channels.Queries.GetChannelsList
                 {
                     Id = c.Id,
                     InterlocutorUserId = c.Interlocutors.Single(i => i.UserId != currentUserId).UserId,
+                    InterlocutorUserIdentityId = c.Interlocutors.Single(i => i.UserId != currentUserId).User.IdentityId,
                     Name = c.Interlocutors.Single(i => i.UserId != currentUserId).User.Name.FullName,
                     Gender = c.Interlocutors.Single(i => i.UserId != currentUserId).User.Gender.ToString(),
                     LastMessage = c.Messages.OrderBy(m => m.CreatedDate).Last().Content,
@@ -50,8 +51,8 @@ namespace PowerChat.Services.Chat.Application.Channels.Queries.GetChannelsList
 
             foreach (var channel in channels)
             {
-                channel.IsOnline = _connectedUsersService.ConnectedUsers
-                    .Any(x => x.UserId == channel.InterlocutorUserId);
+                channel.IsOnline = await _connectedUsersService.IsConnectedAsync(
+                    channel.InterlocutorUserIdentityId, cancellationToken);
             }
 
             return channels;

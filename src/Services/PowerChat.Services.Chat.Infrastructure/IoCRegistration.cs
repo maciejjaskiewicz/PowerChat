@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PowerChat.Services.Common.Infrastructure;
 using PowerChat.Services.Chat.Application.Services;
 using PowerChat.Services.Chat.Infrastructure.Persistence;
+using PowerChat.Services.Chat.Infrastructure.Services;
 
 namespace PowerChat.Services.Chat.Infrastructure
 {
@@ -20,6 +21,8 @@ namespace PowerChat.Services.Chat.Infrastructure
             });
 
             services.AddScoped<IPowerChatServiceDbContext, PowerChatDbContext>();
+
+            services.AddTransient<IConnectedUsersService, ConnectedUsersService>();
         }
     }
 }

@@ -45,6 +45,7 @@ namespace PowerChat.Services.Chat.Application.Channels.Queries.GetChannel
                     Interlocutor = x.Interlocutors.Select(i => new InterlocutorModel
                     {
                         Id = i.User.Id,
+                        IdentityId = i.User.IdentityId,
                         Name = i.User.Name.FullName,
                         Gender = i.User.Gender.ToString()
                     }).Single(i => i.Id != currentUserId),
@@ -64,8 +65,7 @@ namespace PowerChat.Services.Chat.Application.Channels.Queries.GetChannel
                 .AsNoTracking()
                 .SingleAsync(cancellationToken);
 
-            channel.IsOnline = _connectedUsersService.ConnectedUsers
-                .Any(x => x.UserId == channel.Interlocutor.Id);
+            channel.IsOnline = await _connectedUsersService.IsConnectedAsync(channel.Interlocutor.IdentityId, cancellationToken);
 
             return channel;
         }

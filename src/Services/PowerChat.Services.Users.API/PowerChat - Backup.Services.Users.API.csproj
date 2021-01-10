@@ -21,4 +21,8 @@
     <ProjectReference Include="..\PowerChat.Services.Users.Infrastructure\PowerChat.Services.Users.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Hubs\" />
+  </ItemGroup>
+
 </Project>

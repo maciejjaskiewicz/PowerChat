@@ -9,6 +9,7 @@ using PowerChat.Services.Common.Application.Contract.Identity;
 using PowerChat.Services.Common.Infrastructure.Framework.Middleware;
 using PowerChat.Services.Common.Infrastructure.ServiceBus;
 using PowerChat.Services.Users.API.Framework;
+using PowerChat.Services.Users.API.Hubs;
 using PowerChat.Services.Users.Infrastructure.Persistence;
 using Serilog;
 
@@ -40,6 +41,7 @@ namespace PowerChat.Services.Users.API
                     options.ApiSecret = "PowerChatAPI";
                 });
 
+            services.AddSignalR();
             services.AddSwaggerGen();
             services.AddHttpContextAccessor();
 
@@ -55,7 +57,7 @@ namespace PowerChat.Services.Users.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();
             app.UseCors(builder => builder
                 .AllowAnyHeader()
@@ -77,6 +79,7 @@ namespace PowerChat.Services.Users.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/ws");
                 endpoints.MapDefaultControllerRoute();
             });
 

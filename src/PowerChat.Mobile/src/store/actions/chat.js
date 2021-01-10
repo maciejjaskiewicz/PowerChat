@@ -19,7 +19,7 @@ export const fetchConversations = () => {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/channels`, {
+    const response = await fetch(`${Api.url}/chat/channels`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ export const getUserConversation = (userId) => {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/users/${userId}/channel`, {
+    const response = await fetch(`${Api.url}/chat/channels/user/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ export const fetchChat = channelId => {
     if(!authorized(state.auth)) {
       return dispatch(handleUnauthorized());
     }
-    const response = await fetch(`${Api.url}/channels/${channelId}`, {
+    const response = await fetch(`${Api.url}/chat/channels/${channelId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export const sendMessage = (channelId, message) => {
 
     dispatch({type: PRESEND_MESSAGE, channelId: channelId, message: message});
 
-    const response = await fetch(`${Api.url}/channels/${channelId}/messages`, {
+    const response = await fetch(`${Api.url}/chat/channels/${channelId}/messages`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using PowerChat.Services.Chat.Application.Services.Models;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace PowerChat.Services.Chat.Application.Services
 {
     public interface IConnectedUsersService
     {
-        IEnumerable<ConnectedUser> ConnectedUsers { get; }
+        bool IsConnected(string userIdentityId);
+        Task<bool> IsConnectedAsync(string userIdentityId, CancellationToken cancellationToken);
     }
 }

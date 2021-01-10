@@ -32,6 +32,17 @@
                 }
             ],
             "UpstreamPathTemplate": "/chat/{everything}"
+        },
+        {
+            "DownstreamPathTemplate": "/ws/{everything}",
+            "DownstreamScheme": "ws",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 44361
+                }
+            ],
+            "UpstreamPathTemplate": "/users/ws/{everything}"
         }
     ],
     "GlobalConfiguration": {

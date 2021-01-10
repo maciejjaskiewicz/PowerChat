@@ -35,6 +35,7 @@ namespace PowerChat.Gateway.API
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("https://192.168.0.38:44363", "http://192.168.0.38:60783");
                     webBuilder.ConfigureAppConfiguration((host, config) =>
                     {
                         config.AddJsonFile("ocelot.json");

@@ -13,7 +13,7 @@ export const fetchFriends = () => {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/friends`, {
+    const response = await fetch(`${Api.url}/users/friends`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export const addFriend = (id) => {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/friends`, {
+    const response = await fetch(`${Api.url}/users/friends`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export const addFriend = (id) => {
       throw new PowerChatError(title, message);
     }
 
-    const userResponse = await fetch(`${Api.url}/users/${id}`, {
+    const userResponse = await fetch(`${Api.url}/users/users/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -33,8 +33,9 @@ namespace PowerChat.Gateway.API
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
+            app.UseWebSockets();
             await app.UseOcelot();
         }
     }

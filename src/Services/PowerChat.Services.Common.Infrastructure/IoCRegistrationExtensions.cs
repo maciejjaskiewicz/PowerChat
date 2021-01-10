@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PowerChat.Common.Interfaces;
 using PowerChat.Services.Common.Application.Services;
+using PowerChat.Services.Common.Infrastructure.DistributedCache;
 using PowerChat.Services.Common.Infrastructure.ServiceBus;
 using PowerChat.Services.Common.Infrastructure.Services;
 
@@ -13,7 +14,7 @@ namespace PowerChat.Services.Common.Infrastructure
             IConfiguration configuration)
         {
             services.AddRabbitMq(configuration.GetSection("RabbitMq"));
-
+            services.AddRedis(configuration.GetSection("Redis"));
             services.AddTransient<IDateTime, MachineDateTime>();
             services.AddTransient<IMessageBroker, MessageBroker>();
 

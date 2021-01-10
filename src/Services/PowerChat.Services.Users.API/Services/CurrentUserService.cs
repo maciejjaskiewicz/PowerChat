@@ -54,13 +54,15 @@ namespace PowerChat.Services.Users.API.Services
             return UserIdentityId;
         }
 
-        ApplicationResult<string> ICurrentUserService.GetResultUserId()
+        ApplicationResult<long> ICurrentUserService.GetResultUserId()
         {
-            if (!IsAuthenticated)
-                return ApplicationResult<string>.Fail(PowerChatError
+            var userId = UserId;
+
+            if (!userId.HasValue)
+                return ApplicationResult<long>.Fail(PowerChatError
                     .Create("Unauthorized", "Unauthorized"));
 
-            return ApplicationResult<string>.Ok(UserIdentityId);
+            return ApplicationResult<long>.Ok(userId.Value);
         }
     }
 }

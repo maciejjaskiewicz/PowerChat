@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { AppLoading } from 'expo';
+import AppLoading  from 'expo-app-loading';
 import * as Font from 'expo-font';
 import { ApplicationProvider, IconRegistry, Layout } from '@ui-kitten/components';
 import { mapping, dark as darkTheme } from '@eva-design/eva';
@@ -49,9 +49,11 @@ const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
   if(!fontLoaded) {
-    return <AppLoading startAsync={fetchFonts} onFinish={() => {
+    return <AppLoading startAsync={fetchFonts} 
+      onFinish={() => {
         setFontLoaded(true);
       }}
+      onError={error => console.log(error)}
     />
   }
 

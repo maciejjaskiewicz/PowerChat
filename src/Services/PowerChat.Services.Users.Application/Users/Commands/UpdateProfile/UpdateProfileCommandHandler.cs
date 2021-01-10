@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PowerChat.Services.Common.Application.Results;
 using PowerChat.Services.Common.Application.Services;
 using PowerChat.Services.Users.Application.Services;
@@ -31,7 +33,7 @@ namespace PowerChat.Services.Users.Application.Users.Commands.UpdateProfile
                 return ApplicationResult.Fail(currentUserResult.Error);
             }
 
-            var user = await _dbContext.Users.FindAsync(currentUserResult.Value);
+            var user = await _dbContext.Users.SingleAsync(x => x.Id == currentUserResult.Value, cancellationToken);
 
             user.Name = PersonName.Create(request.FirstName, request.LastName);
             user.Gender = !string.IsNullOrEmpty(request.Gender) ? (Gender?) Enum.Parse<Gender>(request.Gender) : null;

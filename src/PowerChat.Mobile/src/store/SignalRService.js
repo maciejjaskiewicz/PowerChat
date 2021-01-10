@@ -12,7 +12,7 @@ const isConnected = () => {
 
 const connect = (token) => {
   _hubConnection = new HubConnectionBuilder()
-    .withUrl(`${Api.url}/chat`, {
+    .withUrl(`${Api.url}/users/ws`, {
       accessTokenFactory: () => token
     })
     .configureLogging(LogLevel.Information)

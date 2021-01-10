@@ -2,7 +2,10 @@ export class AuthData {
   constructor(userId, token, expires) {
     this.userId = userId;
     this.token = token;
-    this.expires = new Date(expires)
+
+    let expiresDate = new Date();
+    expiresDate.setSeconds(expiresDate.getSeconds() + expires);
+    this.expires = expiresDate
   }
 
   valid = () => {

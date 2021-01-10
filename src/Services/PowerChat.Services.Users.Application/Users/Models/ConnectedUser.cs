@@ -2,12 +2,12 @@
 {
     public class ConnectedUser
     {
-        public long UserId { get; }
+        public string UserIdentityId { get; }
         public string ConnectionId { get; }
 
-        public ConnectedUser(long userId, string connectionId)
+        public ConnectedUser(string userIdentityId, string connectionId)
         {
-            UserId = userId;
+            UserIdentityId = userIdentityId;
             ConnectionId = connectionId;
         }
     }

@@ -25,7 +25,7 @@ const loadFriendProfile = async (id, state) => {
     return;
   }
 
-  const response = await fetch(`${Api.url}/users/${id}`, {
+  const response = await fetch(`${Api.url}/users/users/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

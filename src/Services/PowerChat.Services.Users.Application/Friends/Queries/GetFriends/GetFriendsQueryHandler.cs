@@ -29,15 +29,15 @@ namespace PowerChat.Services.Users.Application.Friends.Queries.GetFriends
         public async Task<IList<FriendModel>> Handle(GetFriendsQuery request, CancellationToken cancellationToken)
         {
             var currentUserIdentityId = _currentUserService.GetUserIdentityIdOrThrow();
-            var currentUserId = _dbContext.Users
-                .SingleAsync(x => x.IdentityId == currentUserIdentityId, cancellationToken)
-                .Id;
+            var currentUserId = (await _dbContext.Users
+                .SingleAsync(x => x.IdentityId == currentUserIdentityId, cancellationToken)).Id;
 
             var requestedBy = await _dbContext.Friendships
                 .Where(x => x.RequestedById == currentUserId)
                 .Select(x => new FriendModel
                 {
                     Id = x.RequestedTo.Id,
+                    IdentityId = x.RequestedTo.IdentityId,
                     Name = x.RequestedTo.Name.FullName,
                     Gender = x.RequestedTo.Gender.ToString(),
                     Approved = x.Approved
@@ -50,6 +50,7 @@ namespace PowerChat.Services.Users.Application.Friends.Queries.GetFriends
                 .Select(x => new FriendModel
                 {
                     Id = x.RequestedBy.Id,
+                    IdentityId = x.RequestedBy.IdentityId,
                     Name = x.RequestedBy.Name.FullName,
                     Gender = x.RequestedBy.Gender.ToString(),
                     Approved = x.Approved
@@ -60,10 +61,7 @@ namespace PowerChat.Services.Users.Application.Friends.Queries.GetFriends
             var friends = requestedBy.Union(requestedTo).ToList();
 
             foreach (var friend in friends)
-            {
-                friend.IsOnline = _connectedUsersService.ConnectedUsers
-                    .Any(x => x.UserId == friend.Id);
-            }
+                friend.IsOnline = _connectedUsersService.IsConnected(friend.IdentityId);
 
             return friends;
         }

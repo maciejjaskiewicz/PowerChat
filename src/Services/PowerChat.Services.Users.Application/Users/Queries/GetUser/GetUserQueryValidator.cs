@@ -6,8 +6,8 @@ namespace PowerChat.Services.Users.Application.Users.Queries.GetUser
 {
     public class GetUserQueryValidator : AbstractValidator<GetUserQuery>
     {
-        private readonly UserService _userService;
-        public GetUserQueryValidator(UserService userService)
+        private readonly IUserService _userService;
+        public GetUserQueryValidator(IUserService userService)
         {
             _userService = userService;
 

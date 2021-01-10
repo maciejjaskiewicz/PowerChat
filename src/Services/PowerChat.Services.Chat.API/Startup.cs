@@ -55,7 +55,7 @@ namespace PowerChat.Services.Chat.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();
             app.UseCors(builder => builder
                 .AllowAnyHeader()

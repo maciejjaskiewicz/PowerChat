@@ -6,6 +6,7 @@ namespace PowerChat.Services.Chat.Application.Channels.Queries.GetChannelsList.M
     {
         public long Id { get; set; }
         public long InterlocutorUserId { get; set; }
+        public string InterlocutorUserIdentityId { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
         public string LastMessage { get; set; }

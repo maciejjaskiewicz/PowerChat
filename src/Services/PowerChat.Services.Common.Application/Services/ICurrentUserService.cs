@@ -9,6 +9,6 @@ namespace PowerChat.Services.Common.Application.Services
         bool IsAuthenticated { get; }
         long GetUserIdOrThrow();
         string GetUserIdentityIdOrThrow();
-        ApplicationResult<string> GetResultUserId();
+        ApplicationResult<long> GetResultUserId();
     }
 }

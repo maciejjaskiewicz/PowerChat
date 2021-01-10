@@ -27,6 +27,8 @@ namespace PowerChat.Services.Identity.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             var connectionString = Configuration.GetConnectionString("IdentityDatabase");
             var migrationsAssembly = typeof(PowerChatIdentityDbContext).GetTypeInfo()
                 .Assembly.GetName().Name;
@@ -85,9 +87,14 @@ namespace PowerChat.Services.Identity.API
             }
 
             app.UseSerilogRequestLogging();
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+            );
 
             app.UseIdentityServer();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseExceptionsHandler();

@@ -25,8 +25,8 @@ namespace PowerChat.Services.Users.Application.Users.Queries.SearchUsers
         public async Task<IList<UserPreviewModel>> Handle(SearchUsersQuery request, CancellationToken cancellationToken)
         {
             var currentUserIdentityId = _currentUserService.GetUserIdentityIdOrThrow();
-            var currentUserId = _dbContext.Users
-                .SingleAsync(x => x.IdentityId == currentUserIdentityId, cancellationToken)
+            var currentUserId = (await _dbContext.Users
+                .SingleAsync(x => x.IdentityId == currentUserIdentityId, cancellationToken))
                 .Id;
 
             var usersQuery = _dbContext.Users
