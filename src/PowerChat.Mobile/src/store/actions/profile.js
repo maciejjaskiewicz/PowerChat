@@ -13,7 +13,7 @@ export const fetchProfile = () => {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/account`, {
+    const response = await fetch(`${Api.url}/users/profile`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const updateProfile = (updateProfileModel) => {
       return dispatch(handleUnauthorized());
     }
 
-    const response = await fetch(`${Api.url}/account`, {
+    const response = await fetch(`${Api.url}/users/profile`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

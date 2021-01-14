@@ -3,7 +3,7 @@ import { withStyles } from '@ui-kitten/components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const scrollableAvoidKeyboard = props => {
-  const { style, contentContainerStyle, themedStyle, ...restProps } = props;
+  const { children, style, contentContainerStyle, themedStyle, ...restProps } = props;
 
   return (
     <KeyboardAwareScrollView
@@ -15,7 +15,9 @@ const scrollableAvoidKeyboard = props => {
       contentContainerStyle={[themedStyle.contentContainer, contentContainerStyle]}
       enableOnAndroid={true}
       {...restProps}
-    />
+    >
+      { children }
+    </KeyboardAwareScrollView>
   );
 };
 

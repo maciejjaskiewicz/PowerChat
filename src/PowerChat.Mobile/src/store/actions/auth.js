@@ -3,6 +3,7 @@ import PowerChatError from './../../models/PowerChatError';
 import { AuthData } from '../../models/auth/AuthData';
 import { storeAuthData } from './../../utils/auth';
 import SignalRService from './../SignalRService';
+import jwt_decode from "jwt-decode";
 
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
@@ -11,31 +12,36 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 
 export const signIn = (email, password) => {
   return async dispatch => {
-    const response = await fetch(`${Api.url}/account/login`, {
+    const authParams = {
+      'username': email,
+      'password': password,
+      'grant_type': 'password',
+      'client_id': 'PowerChatMobileClient',
+      'client_secret': 'PowerChatMobileClient',
+      'scope': 'PowerChatAPI openid profile offline_access'
+    }
+
+    const payload = Object.keys(authParams).map((key) => {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(authParams[key]);
+    }).join('&');
+
+    const response = await fetch(`${Api.url}/identity/connect/token`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: JSON.stringify({
-        Email: email,
-        Password: password
-      })
+      body: payload
     });
 
     if(!response.ok) {
       const errorData = await response.json();
-      const errorCode = errorData.Code;
+      const errorCode = errorData.error_description;
       let title = 'An Error Occurred!';
       let message = 'Something went wrong. Please try again.';
 
       switch(errorCode)
       {
-        case 'UserNotFound':
-            title = 'Invalid credentials!';
-            message = 'This email could not be found.';
-            break;
-
-        case 'InvalidCredentials':
+        case 'invalid_username_or_password':
             title = 'Invalid credentials!';
             message = 'Please check your credentials and try again.';
             break;
@@ -45,10 +51,14 @@ export const signIn = (email, password) => {
     }
 
     const resData = await response.json();
+    const decodedToken = jwt_decode(resData.access_token);
+
+    console.log(decodedToken.sub);
+
     const authData = new AuthData(
-      resData.userId,
-      resData.token,
-      resData.expires
+      decodedToken.sub,
+      resData.access_token,
+      resData.expires_in
     );
 
     SignalRService.connect(authData.token);
@@ -60,18 +70,20 @@ export const signIn = (email, password) => {
 
 export const signUp = (signUpModel) => {
   return async dispatch => {
-    const response = await fetch(`${Api.url}/account/create`, {
+    const payload = JSON.stringify({
+      FirstName: signUpModel.firstname,
+      LastName: signUpModel.lastname,
+      Email: signUpModel.email,
+      Password: signUpModel.password,
+      Gender: signUpModel.gender
+    });
+
+    const response = await fetch(`${Api.url}/identity/account/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        FirstName: signUpModel.firstname,
-        LastName: signUpModel.lastname,
-        Email: signUpModel.email,
-        Password: signUpModel.password,
-        Gender: signUpModel.gender
-      })
+      body: payload
     });
 
     if(!response.ok) {

@@ -1,5 +1,6 @@
 using System;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -37,7 +38,6 @@ namespace PowerChat.API
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://localhost:5001");
                     webBuilder.UseStartup<Startup>();
                 });
         }
