@@ -137,7 +137,7 @@ const chatScreen = props => {
         alwaysBounceVertical={false}
         alwaysBounceHorizontal={false}
         contentContainerStyle={themedStyle.contentContainer} 
-        behavior="padding" 
+        behavior="height" 
         enabled>
         {!chat || chat.messages.length === 0 ?
           <View style={themedStyle.center}>

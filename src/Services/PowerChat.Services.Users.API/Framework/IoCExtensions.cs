@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PowerChat.Services.Common.Application.Services;
 using PowerChat.Services.Users.API.Services;
@@ -17,6 +18,7 @@ namespace PowerChat.Services.Users.API.Framework
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IConnectedUsersService, ConnectedUsersService>();
             services.AddTransient<IInternalConnectedUsersService, ConnectedUsersService>();
+            services.AddSingleton<IUserIdProvider, IdentityBasedUserIdProvider>();
 
             return services;
         }

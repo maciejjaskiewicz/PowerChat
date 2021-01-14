@@ -1,4 +1,4 @@
-import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
+import { HubConnectionBuilder, LogLevel, HttpTransportType, InlineRetryPolicy } from '@microsoft/signalr'
 
 import Api from './../constants/Api';
 
@@ -13,10 +13,11 @@ const isConnected = () => {
 const connect = (token) => {
   _hubConnection = new HubConnectionBuilder()
     .withUrl(`${Api.url}/users/ws`, {
-      accessTokenFactory: () => token
+      accessTokenFactory: () => token,
+      transport: HttpTransportType.LongPolling
     })
-    .configureLogging(LogLevel.Information)
-    .withAutomaticReconnect()
+    .configureLogging(LogLevel.Debug)
+    .withAutomaticReconnect([0, 3000, 5000, 10000, 15000, 30000])
     .build();
 
   _hubConnection.start()

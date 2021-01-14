@@ -19,12 +19,20 @@ namespace PowerChat.Gateway.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddOcelot(Configuration);
         }
 
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
+            app.UseCors(cors =>
+            {
+                cors.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+            });
+
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

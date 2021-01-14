@@ -9,6 +9,7 @@ import { mapping, dark as darkTheme } from '@eva-design/eva';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ReduxThunk from 'redux-thunk';
+import { LogBox } from 'react-native';
 
 import AppLayout from './components/AppLayout';
 import PowerChatNavigator from './navigation/PowerChatNavigator';
@@ -47,6 +48,13 @@ SignalRService.registerCommandFactry(store, registerSignalRChatCommands);
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
+
+  LogBox.ignoreLogs(['Setting a timer for a long period of time']);
+  LogBox.ignoreLogs(['It appears that you are using old version of react-navigation']);
+  LogBox.ignoreLogs(['Animated: `useNativeDriver` was not specified.']);
+  LogBox.ignoreLogs(['Your project is accessing the following']);
+  LogBox.ignoreLogs(['The global "__expo" and "Expo" objects will']);
+  LogBox.ignoreLogs(['Error: Connection disconnected with']);
 
   if(!fontLoaded) {
     return <AppLoading startAsync={fetchFonts} 

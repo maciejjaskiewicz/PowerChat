@@ -1,11 +1,17 @@
+using System;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using PowerChat.Services.Common.Application.Contract.Identity;
+using PowerChat.Services.Common.Application.Contract.Users;
 using PowerChat.Services.Common.Infrastructure.Framework.Middleware;
 using PowerChat.Services.Common.Infrastructure.ServiceBus;
 using PowerChat.Services.Users.API.Framework;
@@ -41,7 +47,15 @@ namespace PowerChat.Services.Users.API
                     options.ApiSecret = "PowerChatAPI";
                 });
 
-            services.AddSignalR();
+            services.TryAddEnumerable(
+                ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>,
+                    ConfigureJwtBearerOptions>());
+
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = true;
+                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(15);
+            });
             services.AddSwaggerGen();
             services.AddHttpContextAccessor();
 
@@ -51,6 +65,7 @@ namespace PowerChat.Services.Users.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PowerChatUsersDbContext dbContext)
         {
             app.SubscribeToEvent<AccountCreatedEvent>();
+            app.SubscribeToCommand<SendUserMsgNotificationCommand>();
 
             if (env.IsDevelopment())
             {
@@ -77,9 +92,16 @@ namespace PowerChat.Services.Users.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseWebSockets();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/ws");
+                endpoints.MapHub<ChatHub>("/ws", options =>
+                {
+                    options.Transports =
+                        HttpTransportType.WebSockets |
+                        HttpTransportType.LongPolling;
+                });
                 endpoints.MapDefaultControllerRoute();
             });
 

@@ -36,7 +36,6 @@ namespace PowerChat.Services.Users.API.Services
             return !string.IsNullOrEmpty(await _distributedCache.GetStringAsync(userIdentityId, cancellationToken));
         }
 
-        //TODO
         public async Task SendAsync(string userIdentityId, string method, object payload)
         {
             if (IsConnected(userIdentityId))
@@ -65,6 +64,7 @@ namespace PowerChat.Services.Users.API.Services
             if (!string.IsNullOrEmpty(userIdentityId) && IsConnected(userIdentityId))
             {
                 _distributedCache.Remove(userIdentityId);
+                return userIdentityId;
             }
 
             return null;

@@ -7,5 +7,6 @@ namespace PowerChat.Services.Users.Application.Users.Services
     {
         bool IsConnected(string userIdentityId);
         Task<bool> IsConnectedAsync(string userIdentityId, CancellationToken cancellationToken);
+        Task SendAsync(string userIdentityId, string method, object payload);
     }
 }

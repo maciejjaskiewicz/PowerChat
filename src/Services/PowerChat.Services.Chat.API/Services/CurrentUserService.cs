@@ -43,7 +43,7 @@ namespace PowerChat.Services.Chat.API.Services
             if (!IsAuthenticated)
                 throw new UnauthorizedAccessException("Unauthorized.");
 
-            return UserId ?? throw new NullReferenceException();
+            return UserId ?? throw new UnauthorizedAccessException("Unauthorized.");
         }
 
         public string GetUserIdentityIdOrThrow()
